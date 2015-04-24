@@ -1,0 +1,103 @@
+#include "IndexBuilder_Tree.h"
+
+//--------------------------
+//		public access
+//			--------------------------
+
+void IndexBuilder_Tree::insert(word_packet &wp)
+	{_insert(root, wp);}
+
+void IndexBuilder_Tree::write(){ //arg string index file
+	//simply add, set index file
+	open_file(index_file_name);
+	_write(root);
+	close_file();
+}
+
+void IndexBuilder_Tree::search( std::string &query, std::vector<word_packet> &top_results )
+	{_search(root, query, top_results);}
+
+void IndexBuilder_Tree::clear()
+	{ root = 0;}
+
+//--------------------------
+//		private	
+//			--------------------------
+
+void IndexBuilder_Tree::_insert( IB_Node*& cur, word_packet &wp ){			
+
+	if(!cur){
+		cur = new IB_Node( wp );
+		cur->parent_wp.globaltf = wp.tf;
+		cur->child_tree.insert( wp );		
+	}
+	else if( wp.word.compare(cur->parent_wp.word) < 0 )
+		_insert( cur->left, wp );
+	else if( wp.word.compare(cur->parent_wp.word) > 0 )
+		_insert( cur->right, wp );
+	else{
+		cur->parent_wp.globaltf += wp.tf;
+		cur->child_tree.insert( wp );
+	}
+
+	balance( cur );
+}
+
+void IndexBuilder_Tree::_write( IB_Node *ptr ){
+
+		//write and (clear) 											//maybe not clear for demostraightong
+		if( ptr ){
+
+			//order of traversal does not matter here
+			_write( ptr->left );
+			_write( ptr->right );
+
+			if( index_file.is_open() ){
+				string segment;
+
+				segment += ptr->parent_wp.parent_head_toString();
+				segment += ptr->child_tree.write();
+				segment += ptr->parent_wp.parent_tail_toString();
+
+				index_file.write(segment.c_str(), segment.size() );
+			}
+			else
+				cout << "index file not open";
+
+			//ptr = 0;
+		}
+}
+
+void IndexBuilder_Tree::_search( IB_Node*& cur, std::string &query, std::vector<word_packet> &top_results ){
+
+	//insert when null, then insert into child tree
+	if( !cur ){}
+
+	//otherwise advance left or right
+	else if( query.compare( cur->parent_wp.word ) < 0 )
+		_search( cur->left, query, top_results);
+
+	else if( query.compare( cur->parent_wp.word ) > 0 )
+		_search( cur->right, query, top_results );
+
+	else{
+
+		cur->child_tree.topResults(top_results);
+
+		//update globaltf on word packets, only an issue in indexBuilder
+		for(int i=0; i<top_results.size(); i++)
+			top_results[i].globaltf = cur->parent_wp.globaltf;
+	}
+}
+
+void IndexBuilder_Tree::open_file( string path ){
+
+	index_file.open( path.c_str() );
+	if( index_file.fail() ){
+		cout << "error opening" << path << endl;
+		exit( 1 );
+	}
+}
+
+void IndexBuilder_Tree::close_file()
+	{	index_file.close();	}
