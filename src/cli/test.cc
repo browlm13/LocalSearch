@@ -8,6 +8,9 @@
 //#include "index-handler/IndexHandler.h"
 //***tmp***
 #include "parser-handler/NewDoc_Parser.h"
+#include "parser-handler/IndexedDoc_Parser.h"
+
+
 #include "parser-handler/ParserHandler.h"
 #include "query-engine/QueryEngine.h"
 #include "user-interface/UserInterface.h"
@@ -133,12 +136,23 @@ int main(){
 		//( Program )
     //initilize program
     IndexHandler ih;
+    //tmp
+    NewDoc_Parser ndp(ih);
+    IndexedDoc_Parser idp(ih);
+
     ParserHandler ph(ih);
     QueryEngine qe(ph, ih);
     UserInterface ui(qe);
 
 
     //tmp
+    string test_path_doc = "../database/documents/testDoc0.xml";
+    string test_path_index = "../database/index/index-testDoc0.xml";
+
+    ndp.parse(test_path_doc);
+    ih.saveIndex(test_path_index);
+    idp.parse(test_path_index);
+
     cout << ui.dataBase_toString();
     //qe.load_dataBase();
 	//NewDoc_Parser ndp(ih);
@@ -205,7 +219,7 @@ int main(){
 
 
 			//( Program )
-	  		ih.saveIndex(index_file);
+	  		//ih.saveIndex(index_file);
 	  	}
 
 	  	//time

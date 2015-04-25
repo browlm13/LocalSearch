@@ -11,6 +11,13 @@ public:
 
 	std::string dataBase_toString();		//calls query engine function
 
+
+
+	/*
+		edit:	gui like functions to be in
+				formatting text namespace.
+												*/
+	
 	//TMP
 	std::string border(char c, int length);
 	std::string border(char c, int length, std::string title);

@@ -4,8 +4,8 @@
 //				public
 //			--------------------------
 
-void IndexBuilder_Tree::insert(word_packet &wp)
-	{_insert(root, wp);}
+void IndexBuilder_Tree::addWord(word_packet &wp)
+	{_addWord(root, wp);}
 
 void IndexBuilder_Tree::save(string path){ 
 	open_file(path);
@@ -23,7 +23,7 @@ void IndexBuilder_Tree::clear()
 //				private	
 //			--------------------------
 
-void IndexBuilder_Tree::_insert( IB_Node*& cur, word_packet &wp ){			
+void IndexBuilder_Tree::_addWord( IB_Node*& cur, word_packet &wp ){			
 
 	if(!cur){
 		cur = new IB_Node( wp );
@@ -31,9 +31,9 @@ void IndexBuilder_Tree::_insert( IB_Node*& cur, word_packet &wp ){
 		cur->child_tree.insert( wp );		
 	}
 	else if( wp.word.compare(cur->parent_wp.word) < 0 )
-		_insert( cur->left, wp );
+		_addWord( cur->left, wp );
 	else if( wp.word.compare(cur->parent_wp.word) > 0 )
-		_insert( cur->right, wp );
+		_addWord( cur->right, wp );
 	else{
 		cur->parent_wp.globaltf += wp.tf;
 		cur->child_tree.insert( wp );

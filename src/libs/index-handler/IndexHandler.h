@@ -40,7 +40,14 @@ newDoc_addWord( string word, doc_id_packet id, int tf )				{	// calculates globa
 //TMP****
 //#include "porter2-stemmer/porter2_stemmer.h"
 
+/*
+	edit: clean up interface class.
+		  possibly include builder
+		  avl.
+										*/
+
 #include "IndexBuilder_Tree.h"
+#include "IndexLoader_Tree.h"
 
 using namespace std;
 
@@ -49,11 +56,12 @@ class IndexHandler {
 private:
 	int dataStruct_type;
 
+	//is this the only way??
+	IndexLoader_Tree			loader_avl;
+	//IndexLoader_Hash			loader_hash;
 	IndexBuilder_Tree 			builder_avl;
 
-	//IndexLoader_Interface			loader;
-			//IndexLoader_Tree			loader_avl;
-			//IndexLoader_Hash			loader_hash;
+	IndexLoader_Interface		*loader;
 
 	//disable copy constructor (fuck fstream)
 	IndexHandler(const IndexHandler &ih);
@@ -62,6 +70,7 @@ public:
 	//possibly index file locaiton as arg
 	IndexHandler()	{}
 
+	void addWord( word_packet wp );
 	void newDoc_addWord( word_packet wp );
 
 	void 			set_dataStruct(int type);						//sets data struct type, invoked on loadIndex()

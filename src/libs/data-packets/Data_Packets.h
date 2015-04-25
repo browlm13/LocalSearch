@@ -14,7 +14,8 @@
 enum DataStuct_Types{
 	//possible datastucts
 	AVL,
-	HASH
+	HASH,
+	BUILDER
 };
 
 //--------------------------

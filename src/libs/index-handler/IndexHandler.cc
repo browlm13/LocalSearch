@@ -1,4 +1,5 @@
 #include "IndexHandler.h"
+//#include "data-packets/Data_Packets.h"
 
 //TMP
 #include <iostream>
@@ -14,11 +15,26 @@ void IndexHandler::tmp_search(string q){
 }
 //TMP
 
-void IndexHandler::set_dataStruct(int type)
-	{dataStruct_type = type;}
+void IndexHandler::set_dataStruct(int type){
+	dataStruct_type = type;
 
-void IndexHandler::newDoc_addWord( word_packet wp )
-	{builder_avl.insert( wp );}
+	if(type == DataStuct_Types::AVL)
+		loader = &loader_avl;
+	if(type == DataStuct_Types::BUILDER)
+		loader = &builder_avl;
+}
+
+void IndexHandler::addWord( word_packet wp ){
+	//TMP
+	loader->addWord(wp);
+	cout << wp.word << wp.globaltf << endl;
+}
+
+void IndexHandler::newDoc_addWord( word_packet wp ){
+	set_dataStruct(DataStuct_Types::BUILDER);
+	addWord(wp);
+}
+	//{builder_avl.addWord( wp );}
 
 //--------------------------
 //		File Functions:		

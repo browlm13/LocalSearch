@@ -17,7 +17,7 @@ private:
 	std::vector<doc_packet> *indexed_docs_ptr;
 
 		//Events (called by Shark)
-	void startDoc_event();
+	void startDoc_event() {}
 	void endDoc_event()	{}
 	void startTag_event(std::string &tag_name);			
 	void endTag_event(std::string &tag_name);				

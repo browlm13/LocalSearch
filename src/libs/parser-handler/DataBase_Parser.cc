@@ -7,8 +7,6 @@ using namespace std;
 //				Events		
 //			--------------------------
 
-void DataBase_Parser::startDoc_event(){}	
-
 void DataBase_Parser::startTag_event(string &tag_name){
 	if(tag_name.compare("dataStruct_type") == 0)
 		set_collect_characters(true);

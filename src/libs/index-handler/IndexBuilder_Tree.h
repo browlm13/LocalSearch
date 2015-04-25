@@ -5,18 +5,11 @@
 #include <cstdlib>
 #include <string>
 
+#include "IndexLoader_Interface.h"
 #include "IndexBuilder_Tree_Child.h"
 #include "data-packets/Data_Packets.h"
 //#include "formatting/FormatText.h"
 #include "data-structs/avl.h"
-
-/*
-	edit: add child_toString() and parent_toString() to data packet word packet
-			text formatting will be done here there convert indexBilderTree gtf and string 
-			to word_packet (no id, no tf)
-
-			that way these trees really just move around wp's
-																							*/
 
 //--------------------------
 //		Index Builder Node	(Parent)	(Struct)
@@ -41,14 +34,14 @@ struct IB_Node {
 //		Index Builder Tree				(Class)							
 //			--------------------------
 
-class IndexBuilder_Tree : public avl<IB_Node> {
+class IndexBuilder_Tree : public avl<IB_Node>, public IndexLoader_Interface {
 
 	//private members
 	IB_Node 			*root;
 	fstream				 index_file;
 	//string				 index_file_name;
 
-	void _insert( IB_Node*& cur, word_packet &wp );
+	void _addWord( IB_Node*& cur, word_packet &wp );
 
 	void _write( IB_Node *ptr );
 	void _search( IB_Node*& cur, std::string &query, std::vector<word_packet> &top_results );
@@ -60,7 +53,7 @@ class IndexBuilder_Tree : public avl<IB_Node> {
 
 public:
 
-	void insert( word_packet &wp );
+	void addWord( word_packet &wp );
 
 	void save(std::string path);					
 	void search(std::string &querty, std::vector<word_packet> &top_results);
