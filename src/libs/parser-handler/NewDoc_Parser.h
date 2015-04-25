@@ -24,7 +24,6 @@ using namespace std;
 class NewDoc_Parser : public XMLShark {
 
 private:
-	//IndexHandler ih;						//edit, removed ih and initilization from class, not from struct
 
 	struct Word_Maker{
 		doc_id_packet id;
@@ -36,7 +35,7 @@ private:
 
 		//Events (called by Shark)
 	void startDoc_event();
-	void endDoc_event()	{}											//does nothing
+	void endDoc_event()	{}	//does nothing
 	void startTag_event(string &tag_name);			
 	void endTag_event(string &tag_name);				
 	
@@ -44,7 +43,7 @@ public:
 		//private caller
 	void parse(string path);
 
-	NewDoc_Parser(IndexHandler &ih) : wm(ih) {}						//edit, removed initilizatio here
+	NewDoc_Parser(IndexHandler &ih) : wm(ih) {}	
 	~NewDoc_Parser(){}
 };
 

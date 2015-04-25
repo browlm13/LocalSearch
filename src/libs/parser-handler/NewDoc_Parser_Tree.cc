@@ -7,8 +7,8 @@
 void NewDoc_Parser_Tree::insert(string word, doc_id_packet id)
 {	_insert(root, word, id);	}
 
-void NewDoc_Parser_Tree::write()
-{	_write(root);	}
+void NewDoc_Parser_Tree::send_to_ih()
+{	_send_to_ih(root);	}
 
 void NewDoc_Parser_Tree::clear()
 { root = 0;}
@@ -34,13 +34,13 @@ void NewDoc_Parser_Tree::_insert(NDP_Node*& cur, std::string word, doc_id_packet
 	balance(cur);
 }
 
-void NewDoc_Parser_Tree::_write(NDP_Node *ptr){
+void NewDoc_Parser_Tree::_send_to_ih(NDP_Node *ptr){
 
 	//order it writes is not importaint
 	if(ptr){
 
-		_write(ptr->left);
-		_write(ptr->right);
+		_send_to_ih(ptr->left);
+		_send_to_ih(ptr->right);
 
 		word_packet	wp(ptr->word, ptr->id, ptr->tf);
 		ih->newDoc_addWord(wp);

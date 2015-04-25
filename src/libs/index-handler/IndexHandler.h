@@ -47,8 +47,7 @@ using namespace std;
 class IndexHandler {
 
 private:
-	//const string index_filename = "index.txt";
-	//int index_type;
+	int dataStruct_type;
 
 	IndexBuilder_Tree 			builder_avl;
 
@@ -61,20 +60,14 @@ private:
 
 public:
 	//possibly index file locaiton as arg
-	IndexHandler(string index_filename)	:	builder_avl(index_filename){}
+	IndexHandler()	{}
 
 	void newDoc_addWord( word_packet wp );
 
-		/*
-			edit:	Indexhandler has no control over
-					this. delete add_NewDoc
-													*/
-	void 			add_NewDoc 	( string path );
-
-	void 			set_dataStruct(int type);	//sets data struct type, invoked on loadIndex()
-	void 			saveIndex 	();				//call save on current data structure
-												//only builder avl needs a save, called by query en.
-												//save index will write to a specified file
+	void 			set_dataStruct(int type);						//sets data struct type, invoked on loadIndex()
+	void 			saveIndex 	( std::string path );				//call save on current data structure
+																	//only builder avl needs a save, called by query en.
+																	//save index will write to a specified file
 
 
 	void 			loadIndex 	();				//integrate choice with set_data_structure()
@@ -84,6 +77,7 @@ public:
 
 	//tmp
 	void tmp_search(string q);
+	//tmp
 };
 
 

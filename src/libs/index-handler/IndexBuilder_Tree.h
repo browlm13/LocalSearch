@@ -46,7 +46,7 @@ class IndexBuilder_Tree : public avl<IB_Node> {
 	//private members
 	IB_Node 			*root;
 	fstream				 index_file;
-	string				 index_file_name;
+	//string				 index_file_name;
 
 	void _insert( IB_Node*& cur, word_packet &wp );
 
@@ -62,12 +62,11 @@ public:
 
 	void insert( word_packet &wp );
 
-	//void write(string path);{//first just sets index_file_name}
-	void write();							
+	void save(std::string path);					
 	void search(std::string &querty, std::vector<word_packet> &top_results);
 	void clear();
 
-	IndexBuilder_Tree( std::string index_file_name )	: root( 0 ), index_file_name( index_file_name ) { };	//should not be passed in here
+	IndexBuilder_Tree()	: root( 0 ) {};
 	~IndexBuilder_Tree()	{ };								//not sure what needs to be done here
 };
 

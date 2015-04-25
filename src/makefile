@@ -1,6 +1,6 @@
 #LIBS=libs/index-handler libs/parser-handler libs/data-packets libs/data-structs libs/xmlshark libs/formatting libs/porter2-stemmer
 #LIBS=$(wildcard libs/*)
-LIBS=libs/xmlshark libs/porter2-stemmer libs/parser-handler libs/index-handler
+LIBS=libs/xmlshark libs/porter2-stemmer libs/parser-handler libs/index-handler libs/query-engine libs/user-interface
 INCLUDE_PATH=libs/
 EXE=search
 

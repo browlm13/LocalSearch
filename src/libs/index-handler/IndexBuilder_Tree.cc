@@ -1,15 +1,14 @@
 #include "IndexBuilder_Tree.h"
 
 //--------------------------
-//		public access
+//				public
 //			--------------------------
 
 void IndexBuilder_Tree::insert(word_packet &wp)
 	{_insert(root, wp);}
 
-void IndexBuilder_Tree::write(){ //arg string index file
-	//simply add, set index file
-	open_file(index_file_name);
+void IndexBuilder_Tree::save(string path){ 
+	open_file(path);
 	_write(root);
 	close_file();
 }
@@ -21,7 +20,7 @@ void IndexBuilder_Tree::clear()
 	{ root = 0;}
 
 //--------------------------
-//		private	
+//				private	
 //			--------------------------
 
 void IndexBuilder_Tree::_insert( IB_Node*& cur, word_packet &wp ){			
@@ -44,11 +43,8 @@ void IndexBuilder_Tree::_insert( IB_Node*& cur, word_packet &wp ){
 }
 
 void IndexBuilder_Tree::_write( IB_Node *ptr ){
-
-		//write and (clear) 											//maybe not clear for demostraightong
 		if( ptr ){
 
-			//order of traversal does not matter here
 			_write( ptr->left );
 			_write( ptr->right );
 
@@ -56,15 +52,13 @@ void IndexBuilder_Tree::_write( IB_Node *ptr ){
 				string segment;
 
 				segment += ptr->parent_wp.parent_head_toString();
-				segment += ptr->child_tree.write();
+				segment += ptr->child_tree.toString();
 				segment += ptr->parent_wp.parent_tail_toString();
 
 				index_file.write(segment.c_str(), segment.size() );
 			}
 			else
 				cout << "index file not open";
-
-			//ptr = 0;
 		}
 }
 

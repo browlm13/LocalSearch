@@ -1,9 +1,10 @@
 #ifndef QUERYENGINE_H
 #define QUERYENGINE_H
 
-#include <string>
-#include <iostream>
-#include <cstdlib>
+//#include <fstream>
+#include <vector>
+#include "parser-handler/ParserHandler.h"
+//#include "IndexHandler"
 
 //TMP****
 //#include "porter2-stemmer/porter2_stemmer.h"
@@ -14,23 +15,23 @@ class QueryEngine {
 
 private:
 
+	//fstream file;
+	ParserHandler *ph;
+	IndexHandler *ih;
+	int dataStruct_type;
+	std::vector<doc_packet> dataBase;	//"indexed files"
 
 public:
-	/*
-		update:
-					doc id.path seems unessisary to store ineach word_packet
-					since it is all comming from the same place.
-					the builder tree has two know the path but that could really be it.
 
-					no extension to searching all files, loading multiple into a tree
-					but still needs a linked adrees to save when it loads an index
+	QueryEngine(ParserHandler &ph, IndexHandler &ih) : ph(&ph), ih(&ih) {}
+														
+	void load_dataBase();
+	//void save_newDoc() //{//takes path and modified path and creates doc_packet, with to string to write to database file}
 
-																						*/
+	void load_doc(int selection); //{ph.load_doc( dataBase[selection].path_to_IndexedDoc );}
+	void add_newDoc(std::string path_to_doc);  //{ph.add_newDoc(path_to_doc);}
 
-
-
-	//possibly index file locaiton as arg
-	QueryEngine();
+	std::vector<doc_packet> get_dataBase();
 
 	//maitince mode:
 		//add new Doc(path/to/doc)			//communicates with parser
@@ -65,7 +66,7 @@ public:
 	//void init();
 		//{
 			//parser handler
-		//vector<doc_packet> check_dataBase(&dataStruct_type, path/to/doc?);	//changes data struct type
+		//vector<doc_packet> parse_dataBase(&dataStruct_type, path/to/doc?);	//changes data struct type
 			//index handler
 		//set_dataStruct(dataStruct);
 		//}

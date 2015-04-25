@@ -39,13 +39,13 @@ class IndexBuilder_Tree_Child : public avl<IB_Node_Child> {
 	int result_amount;
 
 	void _insert( IB_Node_Child*& cur, word_packet &wp );
-	void _write( IB_Node_Child *ptr, std::string &entries );
+	void _gather( IB_Node_Child *ptr, std::string &entries );
 	void _topResults( IB_Node_Child *ptr, std::vector<word_packet> &results, int &result_count);
 
 public:
 
 	void insert(word_packet &wp);
-	std::string write();
+	std::string toString();
 	void topResults(std::vector<word_packet> &results);
 	void set_result_amount(int new_result_amount) {result_amount = new_result_amount;}
 

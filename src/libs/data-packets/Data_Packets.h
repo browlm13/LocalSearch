@@ -5,8 +5,17 @@
 
 	/*
 		Description:	One include file
-						where all packets are defined.
-															*/
+						where all packets and enums are defined.
+																	*/
+//--------------------------
+//		Enums
+//			--------------------------
+
+enum DataStuct_Types{
+	//possible datastucts
+	AVL,
+	HASH
+};
 
 //--------------------------
 //		Document Identifier Packet		
@@ -109,14 +118,26 @@ struct word_packet{
 
 		return s;
 	}
-
 };
 
+//--------------------------
+//		Page Packet	
+//			--------------------------
+struct page_packet;
 
-/*
-	edit: add ibt_child_toString() and ibt_parent_toString(); //possibly to string for doc_info full_toString();
-			text formatting will be done here for 
-			containing. convert indexBilderTree gtf and string 
-			to word_packet also? (no id, no tf)
-																	*/
+//--------------------------
+//		Info Packet	
+//			--------------------------
+struct info_packet;
+
+//--------------------------
+//		Doc Packet	
+//			--------------------------
+struct doc_packet{
+
+	std::string title;
+	std::string fullDoc_path;
+	std::string indexDoc_path;
+};
+
 #endif	//DATA_PACKETS_H

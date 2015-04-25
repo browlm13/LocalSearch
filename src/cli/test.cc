@@ -8,6 +8,12 @@
 //#include "index-handler/IndexHandler.h"
 //***tmp***
 #include "parser-handler/NewDoc_Parser.h"
+#include "parser-handler/ParserHandler.h"
+#include "query-engine/QueryEngine.h"
+#include "user-interface/UserInterface.h"
+
+//tmp
+//#include "parser-handler/DataBase_Parser.h"
 
 using namespace std;
 
@@ -44,18 +50,39 @@ string add_prefix( const char *prefix, const char* file_name ){
 int main(){
 
 //---------------------------------------------------------------------------------------------------//
-//		Resource Files
+//		Folder Paths
 //---------------------------------------------------------------------------------------------------//
+
+//--------------------------
+//		"Index" prefix
+//			--------------------------------
+
+	//Document Path Prefix
+	const char* const 	database_pathPrefix = 	"../database/";
+
+//--------------------------
+//		"documents" prefix
+//			--------------------------------
+
+	//Document Path Prefix
+	const char* const 	documents_pathPrefix = 	"../database/documents/";											//const1 = const contents,	 const2 = const ptr
+
+	//Associated Documents Vector
+	std::vector<string> document_files_tmp;
+
+//--------------------------
+//		"Index" prefix
+//			--------------------------------
+
+	//Document Path Prefix
+	const char* const 	index_pathPrefix = 	"../database/index/";
 
 //--------------------------
 //		"resources" prefix
 //			--------------------------------
 
-	//Path Prefix
-	const char* const 	resource_pathPrefix = 	"../resources/";												//const1 = const contents,	 const2 = const ptr
-
-	//Associated Documents Vector
-	std::vector<string> document_files_tmp;
+	//Document Path Prefix
+	const char* const 	resource_pathPrefix = 	"../resources/";	
 
 //--------------------------
 //		file names
@@ -84,7 +111,7 @@ int main(){
 	const char* const	wikibooks_fileName 	= 	"enwikibooks-20140519-pages-meta-current.xml";
 	//document_files_tmp.push_back(wikibooks_fileName);
 
-	document_files_tmp = add_prefix(resource_pathPrefix, document_files_tmp);
+	document_files_tmp = add_prefix(documents_pathPrefix, document_files_tmp);
 
 
 	/*
@@ -93,7 +120,7 @@ int main(){
 
 	//Index
 	const char* const 	index_fileName 		= 	"index.xml";
-	string index_file = add_prefix(resource_pathPrefix, index_fileName);
+	string index_file = add_prefix(index_pathPrefix, index_fileName);
 
 	//StopWords
 	const char* const 	stopWords_fileName	=	"stopWords.txt";
@@ -105,8 +132,29 @@ int main(){
 
 		//( Program )
     //initilize program
-    IndexHandler ih(index_file);
-	NewDoc_Parser ndp(ih);
+    IndexHandler ih;
+    ParserHandler ph(ih);
+    QueryEngine qe(ph, ih);
+    UserInterface ui(qe);
+
+
+    //tmp
+    cout << ui.dataBase_toString();
+    //qe.load_dataBase();
+	//NewDoc_Parser ndp(ih);
+	/*
+	DataBase_Parser dbp;
+
+	//test
+	string path = "../database/database.xml";
+	vector<doc_packet> indexed_docs;
+	int type;
+	dbp.parse_dataBase(path, indexed_docs, type);
+
+	cout << type << endl;
+	for(int i = 0; i<indexed_docs.size(); i++)
+		cout << indexed_docs[i].title << endl;
+	*/
 
 	//Number of trials
     int num_reps = 2;
@@ -138,7 +186,7 @@ int main(){
 
 			//( Program )
 			//TMP***
-			ndp.parse(document_files_tmp[i]);
+			//ndp.parse(document_files_tmp[i]);
 
 
 
@@ -157,7 +205,7 @@ int main(){
 
 
 			//( Program )
-	  		ih.saveIndex();
+	  		ih.saveIndex(index_file);
 	  	}
 
 	  	//time

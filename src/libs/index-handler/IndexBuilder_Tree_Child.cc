@@ -1,15 +1,15 @@
 #include "IndexBuilder_Tree_Child.h"
 
 //--------------------------
-//		public access				
+//				public			
 //			--------------------------
 
 	void IndexBuilder_Tree_Child::insert(word_packet &wp)
 		{_insert(child_root, wp);}
 
-	string IndexBuilder_Tree_Child::write(){
+	string IndexBuilder_Tree_Child::toString(){
 		std::string entries = "";
-		_write( child_root, entries );
+		_gather( child_root, entries );
 		return entries;		
 	}
 
@@ -18,7 +18,7 @@
 		_topResults( child_root, results, result_count );
 	}
 //--------------------------
-//		private								
+//				private								
 //			--------------------------
 
 		void IndexBuilder_Tree_Child::_insert( IB_Node_Child *&cur, word_packet &wp ){
@@ -38,16 +38,12 @@
 		balance( cur );
 	}
 
-void IndexBuilder_Tree_Child::_write( IB_Node_Child *ptr, string &entries ){
-		//write and (clear) 											//maybe not clear for demostraightong
+void IndexBuilder_Tree_Child::_gather( IB_Node_Child *ptr, string &entries ){
 		if( ptr ){
-
-			_write(ptr->left, entries);
-			_write(ptr->right, entries);
+			_gather(ptr->left, entries);
+			_gather(ptr->right, entries);
 
 			entries += ptr->wp.child_toString();
-
-			//ptr = 0;
 		}
 	}
 	void IndexBuilder_Tree_Child::_topResults( IB_Node_Child *ptr, vector<word_packet> &results, int &result_count){

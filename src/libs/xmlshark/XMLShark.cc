@@ -61,6 +61,7 @@ void XMLShark::_parse(string path, long location){
 
 	/*
 		edit:	handle blank documents
+				and first line.
 										*/
 
 	//save path
@@ -85,7 +86,6 @@ void XMLShark::_parse(string path, long location){
 		c = file.get();
 
 		if( c != '<'){//not tag
-
 			if(collect_formatted_strings){
 				str.clear();
 				fm_strs.clear();
@@ -125,10 +125,15 @@ void XMLShark::_parse(string path, long location){
 				collect_formatted_strings = false;
 			}
 
-			/*else{
-				while( c != '<' )
-					{c = file.get();}
-			}*/
+			if(collect_characters){
+				characters.clear();
+				while(c != '<'){
+					characters += c;
+					c = file.get();
+				}
+
+				collect_characters = false;
+			}
 		}
 
 		//cannot be else for transition

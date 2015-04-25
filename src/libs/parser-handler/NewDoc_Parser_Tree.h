@@ -13,10 +13,6 @@
 																	*/
 
 
-//---------------------------------------------------------------------------------------------------//
-//		NewDoc_Parser_Tree 	Prototype
-//---------------------------------------------------------------------------------------------------//
-
 //--------------------------
 //		NewDoc_Parser_Tree	NODE
 //			--------------------------
@@ -49,22 +45,18 @@ private:
 	IndexHandler *ih;
 	NDP_Node *root;
 
-	//compares words
-	//Duplications: ++tf
+	//compares words. Duplications: ++tf
 	void _insert(NDP_Node*& cur, std::string word, doc_id_packet id);
 
-
-	//sends words to index handler with: title, path, loc, tf	
-	//clears struct
-	void _write(NDP_Node *ptr);
+	//sends info to index handler and clears struct
+	void _send_to_ih(NDP_Node *ptr);
 
 public:
 	void insert(std::string word, doc_id_packet id);
-	void write();
+	void send_to_ih();
 	void clear();
 
-	NewDoc_Parser_Tree(IndexHandler &ih)	: 
-			ih(&ih), root(0) { }
+	NewDoc_Parser_Tree(IndexHandler &ih)	: 	ih(&ih), root(0) {}
 	~NewDoc_Parser_Tree()	{ };								//not sure what needs to be done here
 };
 

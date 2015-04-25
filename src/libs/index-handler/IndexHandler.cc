@@ -3,7 +3,6 @@
 //TMP
 #include <iostream>
 using namespace std;
-
 void IndexHandler::tmp_search(string q){
 	//TMP***search
 	vector<word_packet> results;
@@ -13,26 +12,10 @@ void IndexHandler::tmp_search(string q){
 		cout << "\n\t" <<results[i].word << ", gtf: " << results[i].globaltf << ", tf: " << results[i].tf << ", path: " << results[i].id.file_path << ", loc: " << results[i].id.byte_location;	
 	results.clear();
 }
+//TMP
 
-/*
-	edit: remove add_NewDoc,
-			not under ih control.
-									*/
-
-void IndexHandler::add_NewDoc(string path){
-		//first fill up builder tree by calling parser
-	//ParserHandler ph();
-	//ph.parse_newDoc(path);
-
-
-		//then write builder to index file
-	//saveIndex();
-
-	//TMP*************
-	//string index_filename = "index.txt";
-	//IndexBuilder_Tree avl_builder(index_filename);
-}
-
+void IndexHandler::set_dataStruct(int type)
+	{dataStruct_type = type;}
 
 void IndexHandler::newDoc_addWord( word_packet wp )
 	{builder_avl.insert( wp );}
@@ -41,15 +24,7 @@ void IndexHandler::newDoc_addWord( word_packet wp )
 //		File Functions:		
 //			--------------------------
 
-void IndexHandler::saveIndex(){
-	/*
-	//open_file(index_filename.c_str());
-	//***tmp***
-	string index_filename = "index.txt";
-	open_file(index_filename);
-	//builder_avl.write();
-	close_file();
-	*/
+void IndexHandler::saveIndex(string path){
 
 	//TMP***search
 	vector<string> test_search_terms;
@@ -77,24 +52,9 @@ void IndexHandler::saveIndex(){
 	{tmp_search(test_search_terms[i]);}
 */
 			//tmp
-	builder_avl.write();
+	//string index_path = "../resources/index.xml";
+	builder_avl.save(path);
 	
+	//seperate function call needs to be specified
 	builder_avl.clear();
-
 }
-/*
-void IndexHandler::open_file(string path){
-	/*
-	index_file.open(path.c_str());
-	if(index_file.fail()){
-		cout << "error opening" << path << endl;
-		exit(1);
-	}
-	*/
-//}
-/*
-void IndexHandler::close_file()
-{}
-//{index_file.close();}
-
-*/
