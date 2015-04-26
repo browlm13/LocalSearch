@@ -16,8 +16,9 @@ class ParserHandler {
 public:
 	ParserHandler(IndexHandler &ih) : ih(&ih) {}
 
-	//modifies these two parameters from dataBase doc
-	void parse_dataBase(std::string path_to_dataBase, vector<doc_packet> &indexed_docs, int &dataStruct_type);
+	void parse_dataBase(std::string path_to_dataBase, database_packet &database);
+	void save_dataBase(std::string path_to_dataBase, database_packet database);
+
 	void load_doc(std::string path_to_doc);
 	void add_newDoc(std::string path_to_doc);
 	page_packet fetch_page(word_packet wp);

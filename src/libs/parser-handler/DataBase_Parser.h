@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 #include "xmlshark/XMLShark.h"
 #include "../data-packets/Data_Packets.h"
 
@@ -12,19 +13,20 @@
 
 class DataBase_Parser : public XMLShark {
 private:
+
+	database_packet *database_ptr;
 	doc_packet dp;
-	int *dataStruct_type_ptr; 
-	std::vector<doc_packet> *indexed_docs_ptr;
 
 		//Events (called by Shark)
 	void startDoc_event() {}
 	void endDoc_event()	{}
 	void startTag_event(std::string &tag_name);			
-	void endTag_event(std::string &tag_name);				
+	void endTag_event(std::string &tag_name);		
 	
 public:
 		//private caller
-	void parse_dataBase(std::string path_to_dataBase, vector<doc_packet> &indexed_docs, int &dataStruct_type);
+	void parse_dataBase(std::string path_to_dataBase, database_packet &database_arg);
+	void save_dataBase(std::string path_to_dataBase, database_packet database_arg);
 
 	DataBase_Parser(){}	
 	~DataBase_Parser(){}

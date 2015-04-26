@@ -27,7 +27,7 @@ void DataBase_Parser::endTag_event(string &tag_name){
 		int type;
 		string raw_type = get_characters();
 		type = atoi(raw_type.c_str());
-		*dataStruct_type_ptr = type;
+		database_ptr->dataStruct_type = type;
 	}
 
 	if(tag_name.compare("title") == 0)
@@ -40,15 +40,21 @@ void DataBase_Parser::endTag_event(string &tag_name){
 		dp.indexDoc_path = get_characters();
 
 	if(tag_name.compare("document") == 0)
-		indexed_docs_ptr->push_back(dp);
+		database_ptr->indexed_docs.push_back(dp);
 }
 
 //--------------------------
 //			parse	dataBase	
 //			--------------------------
-
-void DataBase_Parser::parse_dataBase(std::string path_to_dataBase, vector<doc_packet> &indexed_docs, int &dataStruct_type){
-	indexed_docs_ptr = &indexed_docs;
-	dataStruct_type_ptr = &dataStruct_type;
+void DataBase_Parser::parse_dataBase(std::string path_to_dataBase,  database_packet &database_arg){
+	database_ptr = &database_arg;
 	_parse(path_to_dataBase, 0);	
+}
+//--------------------------
+//			save	dataBase	
+//			--------------------------
+void DataBase_Parser::save_dataBase(std::string path_to_dataBase, database_packet database){
+	open_file(path_to_dataBase);
+	file.write(database.toString().c_str(), database.toString().size());
+	close_file();
 }

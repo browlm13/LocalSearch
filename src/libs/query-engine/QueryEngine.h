@@ -18,9 +18,10 @@ private:
 	//fstream file;
 	ParserHandler *ph;
 	IndexHandler *ih;
-	int dataStruct_type;
-	std::vector<doc_packet> dataBase;	//"indexed files"
+	database_packet database;
 
+	void save_dataBase();
+	
 public:
 
 	QueryEngine(ParserHandler &ph, IndexHandler &ih) : ph(&ph), ih(&ih) {}
@@ -31,7 +32,7 @@ public:
 	void load_doc(int selection); //{ph.load_doc( dataBase[selection].path_to_IndexedDoc );}
 	void add_newDoc(std::string path_to_doc);  //{ph.add_newDoc(path_to_doc);}
 
-	std::vector<doc_packet> get_dataBase();
+	database_packet get_dataBase();
 
 	//maitince mode:
 		//add new Doc(path/to/doc)			//communicates with parser

@@ -2,6 +2,8 @@
 #define DATA_PACKETS_H
 
 #include <string>
+#include <vector>
+
 #include "formatting/FormatText.h"
 	/*
 		Description:	One include file
@@ -136,6 +138,67 @@ struct doc_packet{
 	std::string title;
 	std::string fullDoc_path;
 	std::string indexDoc_path;
+
+		//child_toString();
+	std::string toString(){
+		std::string s;
+
+		s += "<document>\n";
+
+		s += "\t<title>";
+		s += title;
+		s += "</title>\n";
+
+		s += "\t<full>";
+		s += fullDoc_path;
+		s += "</full>\n";
+
+		s += "\t<index>";
+		s += indexDoc_path;
+		s += "</index>\n";
+
+		s += "</document>\n";
+
+		return s;
+	}
+};
+
+/*
+	edit: put deffinitions
+			in seperate file.
+								*/
+//--------------------------
+//		Database Packet
+//			--------------------------
+struct database_packet{
+	int dataStruct_type;
+	std::vector<doc_packet> indexed_docs;
+
+
+	//copy constor needed
+
+	void add_doc_packet(doc_packet dp){indexed_docs.push_back(dp);}
+	std::vector<doc_packet> get_indexed_docs(){return indexed_docs;}
+	void set_indexed_docs(std::vector<doc_packet> i_d){indexed_docs = i_d;}
+
+	void set_dataStruct_type(int type){dataStruct_type = type;}
+	int get_dataStruct_type(){return dataStruct_type;}
+
+	std::string toString(){
+		std::string s;
+
+		s += "<database>\n";
+
+		s += "<dataStruct_type>";
+		s += FormatText::to_string(dataStruct_type);
+		s += "</dataStruct_type>";
+
+		for(int i=0; i < indexed_docs.size(); i++)
+			s += indexed_docs[i].toString();
+
+		s += "</database>";
+		return s;
+	}
 };
 
 #endif	//DATA_PACKETS_H

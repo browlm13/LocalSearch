@@ -8,28 +8,28 @@ using namespace std;
 
 string UserInterface::dataBase_toString(){
 	string s;
-	vector<doc_packet> dataBase;
+	database_packet dataBase;
 
 	//refresh then get
 	qe->load_dataBase();
 	dataBase = qe->get_dataBase();
 
 	int max_len =15;
-	for(int i = 0; i < dataBase.size(); i++){
-		if(max_len < dataBase[i].title.size())
-			max_len = dataBase[i].title.size() + 5;
+	for(int i = 0; i < dataBase.indexed_docs.size(); i++){
+		if(max_len < dataBase.indexed_docs[i].title.size())
+			max_len = dataBase.indexed_docs[i].title.size() + 5;
 	}
 
 	string title = "DATABASE";
 	s += border('-', max_len, title );
 	s += "\n";
-	for(int i = 0; i < dataBase.size(); i++){
+	for(int i = 0; i < dataBase.indexed_docs.size(); i++){
 		int len;
 		s += "\n| [";
 		s += FormatText::to_string(i+1);
 		s += "] ";
-		s += dataBase[i].title;
-		len = max_len - dataBase[i].title.size() - 4;
+		s += dataBase.indexed_docs[i].title;
+		len = max_len - dataBase.indexed_docs[i].title.size() - 4;
 		s += border(' ', len);
 		s += '|';
 	}

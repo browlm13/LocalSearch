@@ -10,9 +10,16 @@ using namespace std;
 void QueryEngine::load_dataBase(){
 	//tmp**
 	string path_to_dataBase = "../database/database.xml";
-	ph->parse_dataBase(path_to_dataBase, dataBase, dataStruct_type);
-	ih->set_dataStruct(dataStruct_type);
+	ph->parse_dataBase(path_to_dataBase, database);
+	ih->set_dataStruct(database.dataStruct_type);
 }
 
-std::vector<doc_packet> QueryEngine::get_dataBase()
-	{return dataBase;}
+void QueryEngine::save_dataBase(){
+	//tmp**
+	string path_to_dataBase = "../database/database.xml";
+	ph->save_dataBase(path_to_dataBase, database);
+	//WHY THIS LINE ^^^???
+}
+
+database_packet QueryEngine::get_dataBase()
+	{return database;}
