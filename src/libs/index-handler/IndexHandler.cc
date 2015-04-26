@@ -74,8 +74,12 @@ void IndexHandler::saveIndex(string path){
 	//builder_avl.clear();
 
 	//can only save under two condition (unsaved && builder)
-	if( !saved )
+	if( (!saved) && (dataStruct_type == DataStuct_Types::BUILDER) ){
 		loader->save(path);
-	else
+		set_savedFlag(true);
+	}
+	else{
+		set_savedFlag(false);
 		cout << "SAVED." << endl;
+	}
 }

@@ -8,8 +8,11 @@
 /**
 *	sets file path in Word_Maker object
 */
-void NewDoc_Parser::startDoc_event()
-	{	wm.id.file_path = get_path();	}	
+void NewDoc_Parser::startDoc_event(){
+	ih->set_dataStruct(DataStuct_Types::BUILDER);
+	ih->set_savedFlag(false);
+	wm.id.file_path = get_path();
+}	
 
 void NewDoc_Parser::startTag_event(string &tag_name){
 	if(tag_name.compare("page") == 0)

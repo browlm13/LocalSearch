@@ -170,20 +170,83 @@ struct doc_packet{
 //--------------------------
 //		Database Packet
 //			--------------------------
-struct database_packet{
+struct database_packet {
+
+	//members (currently public)
+	std::string path_to_database;
+	std::string path_to_fullDoc;
+	std::string path_to_indexDoc;
+	std::string index_prefix;
+	std::string database_filename;
+
 	int dataStruct_type;
 	std::vector<doc_packet> indexed_docs;
 
+	//private functions (currently public)
+	std::string remove_path(std::string original_path){
+		std::string title;
+		std::string backwords_title;
 
-	//copy constor needed
+		for( int i = original_path.size(); i >= 0; --i ){
+			if( original_path.at(i) != '/' ){
+				backwords_title += original_path.at(i);
+			}
+			else{
+				break;
+			}
+		}
+		for(int i= backwords_title.size(); i >=0; --i)
+			title += backwords_title.at(i);
 
+		return title;
+	}
+
+	//constructor
+	database_packet(){
+		path_to_database 	= 	"../database/";
+		path_to_fullDoc		=	path_to_database + "documetns/";
+		path_to_indexDoc	=	path_to_indexDoc + "index/";
+		index_prefix		=	"index-";
+		database_filename	=	"database.xml";
+	}
+	//copy constructor/=operator
+	//destructor
+
+	//add a new document
+	void add_doc(std::string original_path){
+		doc_packet dp;
+		dp.title = remove_path(original_path);
+		dp.fullDoc_path = path_to_fullDoc + dp.title;
+		dp.indexDoc_path = path_to_indexDoc + index_prefix + dp.title;
+		indexed_docs.push_back(dp);
+	}
+
+	//add_doc instead of this vvv
 	void add_doc_packet(doc_packet dp){indexed_docs.push_back(dp);}
-	std::vector<doc_packet> get_indexed_docs(){return indexed_docs;}
-	void set_indexed_docs(std::vector<doc_packet> i_d){indexed_docs = i_d;}
+	//add_doc instead of this ^^^
 
-	void set_dataStruct_type(int type){dataStruct_type = type;}
-	int get_dataStruct_type(){return dataStruct_type;}
 
+	//setters and getters
+	std::string 				get_database_path()
+	{return path_to_database + database_filename;}		//returns full path to file
+
+	void 						set_dataStruct_type(int type)
+	{dataStruct_type = type;}
+	int 						get_dataStruct_type()
+	{return dataStruct_type;}
+
+	void 						set_indexed_docs(std::vector<doc_packet> i_d)
+	{indexed_docs = i_d;}
+	std::vector<doc_packet> 	get_indexed_docs()
+	{return indexed_docs;}
+
+	int							size()
+	{return indexed_docs.size();}
+
+	doc_packet 					get_doc(int index)
+	{return indexed_docs[index];}
+
+	//to string
 	std::string toString(){
 		std::string s;
 

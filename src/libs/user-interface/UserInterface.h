@@ -9,6 +9,7 @@ class UserInterface {
 public:
 	UserInterface(QueryEngine qe) : qe(&qe)	{}
 
+	void homeScreen();
 	std::string dataBase_toString();		//calls query engine function
 
 
@@ -19,6 +20,8 @@ public:
 												*/
 	
 	//TMP
+	std::string prompt(string prompt);
+	std::string options_box(vector<string> options, std::string title);
 	std::string border(char c, int length);
 	std::string border(char c, int length, std::string title);
 };

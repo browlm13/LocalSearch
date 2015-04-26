@@ -32,6 +32,8 @@ private:
 		Word_Maker(IndexHandler &ih)	: 	avl(ih){}
 	} wm;
 
+	IndexHandler *ih;
+
 
 		//Events (called by Shark)
 	void startDoc_event();
@@ -43,7 +45,7 @@ public:
 		//private caller
 	void parse(string path);
 
-	NewDoc_Parser(IndexHandler &ih) : wm(ih) {}	
+	NewDoc_Parser(IndexHandler &ih) : ih(&ih), wm(ih) {}	
 	~NewDoc_Parser(){}
 };
 

@@ -150,23 +150,30 @@ int main(){
     string test_path_index = "../database/index/index-testDoc0.xml";
 
     //start up example
-    cout << ui.dataBase_toString();
+    ui.homeScreen();
+    //cout << ui.dataBase_toString();
 
     //enters new doc path
     //get doc path, save that shit
     //add new doc
+    /*
     ih.set_dataStruct(DataStuct_Types::BUILDER);
     ih.set_savedFlag(false);
     ndp.parse(test_path_doc);
+	*/
 
+	/*
     //save
     ih.saveIndex(test_path_index);
     ih.set_savedFlag(true);
+	*/
 
+	/*
     //load from databse
     ih.set_dataStruct(DataStuct_Types::BUILDER);
     idp.parse(test_path_index);
-
+	*/
+	
     //cout << ui.dataBase_toString();
     //qe.load_dataBase();
 	//NewDoc_Parser ndp(ih);

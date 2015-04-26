@@ -19,19 +19,24 @@ private:
 	ParserHandler *ph;
 	IndexHandler *ih;
 	database_packet database;
+	std::string new_path;
 
+	//will delete this function
 	void save_dataBase();
-	
+	//to be deleted
+
 public:
 
 	QueryEngine(ParserHandler &ph, IndexHandler &ih) : ph(&ph), ih(&ih) {}
-														
-	void load_dataBase();
-	//void save_newDoc() //{//takes path and modified path and creates doc_packet, with to string to write to database file}
+	
+	void load_dataBase();	//refreshes or loads database object member
 
 	void load_doc(int selection); //{ph.load_doc( dataBase[selection].path_to_IndexedDoc );}
-	void add_newDoc(std::string path_to_doc);  //{ph.add_newDoc(path_to_doc);}
 
+	void add_newDoc(std::string path_to_doc);  //{ph.add_newDoc(path_to_doc);}
+	void save_newDoc(std::string path_to_doc);
+
+	//ui functions
 	database_packet get_dataBase();
 
 	//maitince mode:
