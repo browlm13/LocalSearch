@@ -23,8 +23,9 @@ void IndexBuilder_Tree::clear()
 //				private	
 //			--------------------------
 
-void IndexBuilder_Tree::_addWord( IB_Node*& cur, word_packet &wp ){			
-
+void IndexBuilder_Tree::_addWord( IB_Node*& cur, word_packet &wp ){	
+	//TMP
+	//cout << wp.word << endl;
 	if(!cur){
 		cur = new IB_Node( wp );
 		cur->parent_wp.globaltf = wp.tf;
@@ -44,7 +45,8 @@ void IndexBuilder_Tree::_addWord( IB_Node*& cur, word_packet &wp ){
 
 void IndexBuilder_Tree::_write( IB_Node *ptr ){
 		if( ptr ){
-
+			//TMP
+			//cout << "saving..." << endl;
 			_write( ptr->left );
 			_write( ptr->right );
 

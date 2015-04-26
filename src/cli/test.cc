@@ -149,11 +149,23 @@ int main(){
     string test_path_doc = "../database/documents/testDoc0.xml";
     string test_path_index = "../database/index/index-testDoc0.xml";
 
+    //enters new doc path
+    //get doc path, save that shit
+
+    //add new doc
+    ih.set_dataStruct(DataStuct_Types::BUILDER);
+    ih.set_savedFlag(false);
     ndp.parse(test_path_doc);
+
+    //save
     ih.saveIndex(test_path_index);
+    ih.set_savedFlag(true);
+
+    //load from databse
+    ih.set_dataStruct(DataStuct_Types::BUILDER);
     idp.parse(test_path_index);
 
-    cout << ui.dataBase_toString();
+    //cout << ui.dataBase_toString();
     //qe.load_dataBase();
 	//NewDoc_Parser ndp(ih);
 	/*

@@ -2,7 +2,7 @@
 #define DATA_PACKETS_H
 
 #include <string>
-
+#include "formatting/FormatText.h"
 	/*
 		Description:	One include file
 						where all packets and enums are defined.
@@ -79,8 +79,7 @@ struct word_packet{
 		s += "</t>\n";
 
 		s += "\t<gtf>";
-		//s += globaltf;				//needs to be formatted
-		s+= "xxx";						//tmp soultion
+		s += FormatText::to_string(globaltf);
 		s += "</gtf>\n";
 
 		return s;
@@ -102,13 +101,11 @@ struct word_packet{
 		s += "\t<e>\n";
 
 		s += "\t\t<tf>";
-		//s += tf;					//needs to be formatted
-		s += "xxx";
+		s += FormatText::to_string(tf);
 		s += "</tf>\n";
 
 		s += "\t\t<l>";
-		//s += id.byte_location;	//needs to be formatted
-		s += "xxx";
+		s += FormatText::to_string(id.byte_location);
 		s += "</l>\n";
 
 		s += "\t\t<p>";

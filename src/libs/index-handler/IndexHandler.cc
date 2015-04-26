@@ -7,7 +7,8 @@ using namespace std;
 void IndexHandler::tmp_search(string q){
 	//TMP***search
 	vector<word_packet> results;
-	builder_avl.search(q, results);
+	//builder_avl.search(q, results);
+	loader->search(q, results);
 	cout << endl << "search = " << q;
 	for (int i=0; i<results.size(); i++)
 		cout << "\n\t" <<results[i].word << ", gtf: " << results[i].globaltf << ", tf: " << results[i].tf << ", path: " << results[i].id.file_path << ", loc: " << results[i].id.byte_location;	
@@ -18,30 +19,28 @@ void IndexHandler::tmp_search(string q){
 void IndexHandler::set_dataStruct(int type){
 	dataStruct_type = type;
 
-	if(type == DataStuct_Types::AVL)
-		loader = &loader_avl;
-	if(type == DataStuct_Types::BUILDER)
-		loader = &builder_avl;
+	if(dataStruct_type == DataStuct_Types::AVL){
+		loader = new IndexLoader_Tree;
+		//loader = &loader_avl;
+	}
+	if(dataStruct_type == DataStuct_Types::BUILDER){
+		loader = new IndexBuilder_Tree;
+		//loader = &builder_avl;
+	}
 }
 
-void IndexHandler::addWord( word_packet wp ){
-	//TMP
-	loader->addWord(wp);
-	cout << wp.word << wp.globaltf << endl;
-}
+void IndexHandler::set_savedFlag(bool status)
+	{saved = status;}
 
-void IndexHandler::newDoc_addWord( word_packet wp ){
-	set_dataStruct(DataStuct_Types::BUILDER);
-	addWord(wp);
-}
-	//{builder_avl.addWord( wp );}
+void IndexHandler::addWord( word_packet wp )
+	{loader->addWord(wp);}
 
 //--------------------------
 //		File Functions:		
 //			--------------------------
 
 void IndexHandler::saveIndex(string path){
-
+/*
 	//TMP***search
 	vector<string> test_search_terms;
 	string a = "trex";
@@ -69,8 +68,14 @@ void IndexHandler::saveIndex(string path){
 */
 			//tmp
 	//string index_path = "../resources/index.xml";
-	builder_avl.save(path);
+	//builder_avl.save(path);
 	
 	//seperate function call needs to be specified
-	builder_avl.clear();
+	//builder_avl.clear();
+
+	//can only save under two condition (unsaved && builder)
+	if( !saved )
+		loader->save(path);
+	else
+		cout << "SAVED." << endl;
 }

@@ -4,6 +4,7 @@
 //				public
 //			--------------------------
 
+//TMP cout
 void IndexLoader_Tree::addWord(word_packet &wp)
 	{_addWord(root, wp);}
 
@@ -46,12 +47,6 @@ void IndexLoader_Tree::_search( IL_Node*& cur, std::string &query, std::vector<w
 	else if( query.compare( cur->parent_wp.word ) > 0 )
 		_search( cur->right, query, top_results );
 
-	else{
-
+	else
 		cur->child_tree.topResults(top_results);
-
-		//update globaltf on word packets, only an issue in indexBuilder
-		for(int i=0; i<top_results.size(); i++)
-			top_results[i].globaltf = cur->parent_wp.globaltf;
-	}
 }

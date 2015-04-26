@@ -43,7 +43,7 @@ void NewDoc_Parser_Tree::_send_to_ih(NDP_Node *ptr){
 		_send_to_ih(ptr->right);
 
 		word_packet	wp(ptr->word, ptr->id, ptr->tf);
-		ih->newDoc_addWord(wp);
+		ih->addWord(wp);
 
 		ptr->left = 0;
 		ptr->right = 0;

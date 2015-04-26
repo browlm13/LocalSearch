@@ -54,12 +54,13 @@ using namespace std;
 class IndexHandler {
 
 private:
+	bool saved;
 	int dataStruct_type;
 
 	//is this the only way??
-	IndexLoader_Tree			loader_avl;
+	//IndexLoader_Tree			loader_avl;
 	//IndexLoader_Hash			loader_hash;
-	IndexBuilder_Tree 			builder_avl;
+	//IndexBuilder_Tree 			builder_avl;
 
 	IndexLoader_Interface		*loader;
 
@@ -68,12 +69,14 @@ private:
 
 public:
 	//possibly index file locaiton as arg
-	IndexHandler()	{}
+	IndexHandler() {}
+	~IndexHandler() {}
 
 	void addWord( word_packet wp );
-	void newDoc_addWord( word_packet wp );
 
-	void 			set_dataStruct(int type);						//sets data struct type, invoked on loadIndex()
+	void 			set_dataStruct( int type );	
+	void 			set_savedFlag( bool status );
+
 	void 			saveIndex 	( std::string path );				//call save on current data structure
 																	//only builder avl needs a save, called by query en.
 																	//save index will write to a specified file

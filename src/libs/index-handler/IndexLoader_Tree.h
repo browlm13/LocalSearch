@@ -48,6 +48,7 @@ public:
 	void search(std::string &querty, std::vector<word_packet> &top_results);
 	void clear();
 
+
 	IndexLoader_Tree()	: root( 0 ) {}
 	~IndexLoader_Tree()	{ }								//not sure what needs to be done here
 };
