@@ -139,6 +139,16 @@ struct doc_packet{
 	std::string fullDoc_path;
 	std::string indexDoc_path;
 
+		//overloads
+	doc_packet& operator=( const doc_packet &rhs ){
+		
+		title = rhs.title;
+		fullDoc_path = rhs.fullDoc_path;
+		indexDoc_path = rhs.indexDoc_path;
+
+		return *this;
+	}
+
 		//child_toString();
 	std::string toString(){
 		std::string s;
@@ -187,7 +197,7 @@ struct database_packet {
 		std::string title;
 		std::string backwords_title;
 
-		for( int i = original_path.size(); i >= 0; --i ){
+		for( int i = original_path.size() -1; i >= 0; i-- ){
 			if( original_path.at(i) != '/' ){
 				backwords_title += original_path.at(i);
 			}
@@ -195,7 +205,8 @@ struct database_packet {
 				break;
 			}
 		}
-		for(int i= backwords_title.size(); i >=0; --i)
+		
+		for(int i= backwords_title.size() - 1; i >=0; i--)
 			title += backwords_title.at(i);
 
 		return title;
@@ -204,8 +215,8 @@ struct database_packet {
 	//constructor
 	database_packet(){
 		path_to_database 	= 	"../database/";
-		path_to_fullDoc		=	path_to_database + "documetns/";
-		path_to_indexDoc	=	path_to_indexDoc + "index/";
+		path_to_fullDoc		=	path_to_database + "documents/";
+		path_to_indexDoc	=	path_to_database + "index/";
 		index_prefix		=	"index-";
 		database_filename	=	"database.xml";
 	}
@@ -224,7 +235,6 @@ struct database_packet {
 	//add_doc instead of this vvv
 	void add_doc_packet(doc_packet dp){indexed_docs.push_back(dp);}
 	//add_doc instead of this ^^^
-
 
 	//setters and getters
 	std::string 				get_database_path()
@@ -254,7 +264,7 @@ struct database_packet {
 
 		s += "<dataStruct_type>";
 		s += FormatText::to_string(dataStruct_type);
-		s += "</dataStruct_type>";
+		s += "</dataStruct_type>\n";
 
 		for(int i=0; i < indexed_docs.size(); i++)
 			s += indexed_docs[i].toString();

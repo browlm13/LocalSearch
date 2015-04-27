@@ -88,7 +88,7 @@ void IndexBuilder_Tree::_search( IB_Node*& cur, std::string &query, std::vector<
 
 void IndexBuilder_Tree::open_file( string path ){
 
-	index_file.open( path.c_str() );
+	index_file.open( path.c_str(), fstream::out );
 	if( index_file.fail() ){
 		cout << "error opening" << path << endl;
 		exit( 1 );

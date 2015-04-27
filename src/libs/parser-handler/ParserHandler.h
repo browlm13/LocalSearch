@@ -16,12 +16,8 @@ class ParserHandler {
 public:
 	ParserHandler(IndexHandler &ih) : ih(&ih) {}
 
-	void parse_dataBase(std::string path_to_dataBase, database_packet &database);		//will remove path
-
-	//void add_doc_to_dataBase(std::string new_path, database_packet &database);
-	//to be removed for house keeping
-	void save_dataBase(std::string path_to_dataBase, database_packet database);
-	//to be removed for house keeping
+	void parse_dataBase(database_packet &database);
+	void add_doc_to_dataBase(std::string new_path, database_packet &database);
 
 	void load_doc(std::string path_to_doc);
 	void add_newDoc(std::string path_to_doc);

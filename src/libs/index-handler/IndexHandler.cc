@@ -19,14 +19,11 @@ void IndexHandler::tmp_search(string q){
 void IndexHandler::set_dataStruct(int type){
 	dataStruct_type = type;
 
-	if(dataStruct_type == DataStuct_Types::AVL){
+	if(dataStruct_type == DataStuct_Types::AVL)
 		loader = new IndexLoader_Tree;
-		//loader = &loader_avl;
-	}
-	if(dataStruct_type == DataStuct_Types::BUILDER){
+
+	if(dataStruct_type == DataStuct_Types::BUILDER)
 		loader = new IndexBuilder_Tree;
-		//loader = &builder_avl;
-	}
 }
 
 void IndexHandler::set_savedFlag(bool status)

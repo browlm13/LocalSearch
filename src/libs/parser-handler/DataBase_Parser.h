@@ -24,16 +24,13 @@ private:
 	void startTag_event(std::string &tag_name);			
 	void endTag_event(std::string &tag_name);
 	void endDoc_event();		
+
+	void save_dataBase();
 	
 public:
 		//private caller
-	void parse_dataBase(std::string path_to_dataBase, database_packet &database_arg);		//will remove path
-
-	//void add_doc_to_dataBase(std::string new_path, database_packet &database);
-
-	//will be PRIVATE function
-	void save_dataBase(std::string path_to_dataBase, database_packet database_arg);			//will remove path
-	//will be PRIVATE function
+	void parse_dataBase(database_packet &database_arg);
+	void add_doc_to_dataBase(std::string new_path, database_packet &database);			//should return error
 
 	DataBase_Parser(IndexHandler &ih) : ih(&ih) {}	
 	~DataBase_Parser(){}

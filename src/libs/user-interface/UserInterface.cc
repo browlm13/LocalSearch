@@ -18,10 +18,9 @@ void UserInterface::homeScreen(){
 	string new_path = prompt("[new path]: ");
 
 	//TMP
-	string test_path_doc = "../database/documents/testDoc0.xml";
-	string test_path_index = "../database/index/index-testDoc0.xml";
-	qe->add_newDoc(test_path_doc);
-	qe->save_newDoc(test_path_index);
+	//string test_path_doc = "../database/documents/testDoc0.xml";		//string test_path_index = "../database/index/index-testDoc0.xml";
+	qe->add_newDoc(new_path);
+	qe->save_newDoc();
 
 	//tail
 	cout << border('=', 100) << endl;
@@ -36,10 +35,14 @@ string UserInterface::dataBase_toString(){
 	qe->load_dataBase();
 	dataBase = qe->get_dataBase();
 
-	for(int i = 0 ; i < dataBase.indexed_docs.size(); i++)
-		saved_docs.push_back(dataBase.indexed_docs[i].title);
+	if(dataBase.size() > 0){
+		for(int i = 0 ; i < dataBase.indexed_docs.size(); i++)
+			saved_docs.push_back(dataBase.indexed_docs[i].title);
 
-	s = options_box(saved_docs, " Saved Documents ");
+		s = options_box(saved_docs, " Saved Documents ");
+	}
+	else
+		s = "No saved Documents";
 
 	return s;
 }

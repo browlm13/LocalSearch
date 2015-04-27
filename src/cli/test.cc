@@ -146,8 +146,8 @@ int main(){
 
 
     //tmp
-    string test_path_doc = "../database/documents/testDoc0.xml";
-    string test_path_index = "../database/index/index-testDoc0.xml";
+    //string test_path_doc = "../database/documents/testDoc0.xml";
+    //string test_path_index = "../database/index/index-testDoc0.xml";
 
     //start up example
     ui.homeScreen();
@@ -173,7 +173,7 @@ int main(){
     ih.set_dataStruct(DataStuct_Types::BUILDER);
     idp.parse(test_path_index);
 	*/
-	
+
     //cout << ui.dataBase_toString();
     //qe.load_dataBase();
 	//NewDoc_Parser ndp(ih);
