@@ -20,6 +20,10 @@ enum DataStuct_Types{
 	BUILDER
 };
 
+enum File_Errors{
+	ERROR_DUPLICATE_FILE
+};
+
 //--------------------------
 //		Document Identifier Packet		
 //			--------------------------

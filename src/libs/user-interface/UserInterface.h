@@ -10,6 +10,13 @@ public:
 	UserInterface(QueryEngine qe) : qe(&qe)	{}
 
 	void homeScreen();
+	void searchScreen();
+	void newDocScreen();
+	void configScreen();
+	void quitScreen();
+	void infoScreen();
+	void pageScreen();
+
 	std::string dataBase_toString();		//calls query engine function
 
 

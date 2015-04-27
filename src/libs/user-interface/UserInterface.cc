@@ -7,24 +7,124 @@
 
 using namespace std;
 
+/*
+	things to think about:	doc concistancy when switching screens.
+		 					back and forward screen navigation.
+		 					just like (s)ave can appear and dissapear...
+		 					some letter will always bring you to search
+		 					if avaible from any screen.
+																				*/
+
 void UserInterface::homeScreen(){
 	//header
 	cout << border('=', 100, " local SEARCH ") << endl << endl;
 
 	cout << dataBase_toString() << endl;
 
-	//user input
-	//cout << prompt("[#]: ") << endl;
-	string new_path = prompt("[new path]: ");
+	//start
+	//int selection = atoi( prompt("[#]: ").c_str() );
 
-	//TMP
-	//string test_path_doc = "../database/documents/testDoc0.xml";		//string test_path_index = "../database/index/index-testDoc0.xml";
-	qe->add_newDoc(new_path);
-	qe->save_newDoc();
+	//if (correct) #
+	//qe->load_doc(selection);		//error return
+	//searchScreen();
+
+	//if n
+	//newDocScreen();
+
+
+	//if c
+	//configScreen();
+
+	//if q
+	//quitScreen();
 
 	//tail
 	cout << border('=', 100) << endl;
 }
+
+void UserInterface::newDocScreen(){
+
+	/*
+		edit:		if you must search cmds
+					use quotes.				*/
+
+
+	//string new_path = prompt("[new path]: ");
+	//qe->add_newDoc(new_path);			//error return
+
+
+	//if h
+	//homeScreen();
+
+	//if s
+	//qe->save_newDoc();				//error return
+
+
+	//if c
+	//configScreen();
+
+
+	//if q
+	//quitScreen();
+
+	//drops through to search screen if success
+	//searchScreen();
+}
+
+void UserInterface::searchScreen(){
+
+	//string query = prompt("[?query?]: ");
+		//***still working***
+		//*will jump into in*
+		//*-foScreen() if su*
+		//*-sessful.        *
+		//*******************
+
+	//if h
+	//homeScreen();
+
+	/*
+		edit: "s" should only be visible when
+				possible.
+													*/
+
+	//if s
+	//qe->save_NewDoc();			//error return
+
+	//if c
+	//configScreen();
+
+	//if q
+	//quitScreen();
+
+	//drops through to info screen if success
+	//infoScreen();
+}
+
+void UserInterface::configScreen(){
+
+	//string settings = prompt("[set]: ");
+		//***still working***
+
+	//if h
+	//homeScreen();
+
+	//if q
+	//quitScreen();
+}
+
+void UserInterface::quitScreen(){
+	//checks if unsaved doc
+	//if unsaved gives warning
+	//if you choose not to quit
+	//after warning, brings you
+	//back to screen q was pressed
+}
+
+void UserInterface::infoScreen(){}
+void UserInterface::pageScreen(){}
+
+
 
 string UserInterface::dataBase_toString(){
 	string s;
@@ -32,7 +132,6 @@ string UserInterface::dataBase_toString(){
 	vector<string> saved_docs;
 
 	//refresh then get
-	qe->load_dataBase();
 	dataBase = qe->get_dataBase();
 
 	if(dataBase.size() > 0){

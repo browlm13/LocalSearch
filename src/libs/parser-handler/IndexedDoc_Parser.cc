@@ -33,13 +33,13 @@ void IndexedDoc_Parser::endTag_event(string &tag_name){
 		wp.word = get_characters();
 
 	if(tag_name.compare("gtf") == 0)
-		wp.globaltf = 3;//atoi( get_characters().c_str() );
+		wp.globaltf = atoi( get_characters().c_str() );
 
 	if(tag_name.compare("tf") == 0)
-		wp.tf = 2;//atoi( get_characters().c_str() );
+		wp.tf = atoi( get_characters().c_str() );
 
 	if(tag_name.compare("loc") == 0)
-		wp.id.byte_location = 1;//atoi( get_characters().c_str() );
+		wp.id.byte_location = atoi( get_characters().c_str() );
 
 	if(tag_name.compare("p") == 0)
 		wp.id.file_path = get_characters();
