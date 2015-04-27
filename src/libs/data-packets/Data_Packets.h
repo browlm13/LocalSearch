@@ -236,6 +236,11 @@ struct database_packet {
 		indexed_docs.push_back(dp);
 	}
 
+	//remove a document
+	void remove_doc(int index)
+	{indexed_docs.erase( indexed_docs.begin() + (index -1) );}
+
+	//can i delete this vvv???
 	//add_doc instead of this vvv
 	void add_doc_packet(doc_packet dp){indexed_docs.push_back(dp);}
 	//add_doc instead of this ^^^

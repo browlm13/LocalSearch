@@ -18,6 +18,11 @@ void ParserHandler::add_doc_to_dataBase(std::string new_path, database_packet &d
 	dbp.add_doc_to_dataBase(new_path, database);
 }
 
+void ParserHandler::remove_doc_from_dataBase(int selection, database_packet &database){
+	DataBase_Parser dbp(*ih);
+	dbp.remove_doc_from_dataBase(selection, database);
+}
+
 void ParserHandler::add_newDoc(string path_to_doc){
 	NewDoc_Parser ndp(*ih);
 	ndp.parse(path_to_doc);

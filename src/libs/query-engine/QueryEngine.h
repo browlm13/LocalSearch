@@ -3,6 +3,7 @@
 
 //#include <fstream>
 #include <vector>
+
 #include "parser-handler/ParserHandler.h"
 //#include "IndexHandler"
 
@@ -32,6 +33,7 @@ public:
 	void load_doc(int selection);
 	void add_newDoc(std::string path_to_doc);
 	void save_newDoc();
+	void remove_doc(int selection);
 
 	//ui functions
 	database_packet get_dataBase();

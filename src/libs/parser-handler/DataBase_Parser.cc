@@ -1,6 +1,8 @@
-#include "DataBase_Parser.h"
-#include "formatting/FormatText.h"
 #include <iostream>
+#include <cstdio>
+#include "DataBase_Parser.h"
+
+#include "formatting/FormatText.h"
 
 using namespace std;
 //--------------------------
@@ -49,7 +51,7 @@ void DataBase_Parser::endDoc_event()
 //--------------------------
 //			parse	dataBase	
 //			--------------------------
-void DataBase_Parser::parse_dataBase(database_packet &database_arg){
+void DataBase_Parser::parse_dataBase(database_packet &database_arg){								//return error
 	database_ptr = &database_arg;
 	_parse(database_ptr->get_database_path(), 0);
 }
@@ -78,12 +80,38 @@ void DataBase_Parser::add_doc_to_dataBase(std::string new_path, database_packet 
 
 	ih->saveIndex(dp.indexDoc_path);
 }
+//--------------------------
+//		remove	doc from dataBase	
+//			--------------------------
+//deletes files from index, documents, database, and relodes database
+void DataBase_Parser::remove_doc_from_dataBase(int selection, database_packet &database){			//return error
+	database_ptr = &database;
+	dp = database_ptr->get_doc(selection);
+	//delete index file 				//error exit and return
+	delete_file(dp.indexDoc_path);
+	//delete documents file 			//error exit and return
+	delete_file(dp.fullDoc_path);
+	database_ptr->remove_doc(selection);
+	save_dataBase();					//error exit and return
+
+}
 
 //--------------------------
 //			save	dataBase	(private)
 //			--------------------------
-void DataBase_Parser::save_dataBase(){
+void DataBase_Parser::save_dataBase(){																//return error
 	open_file(database_ptr->get_database_path());
 	file.write(database_ptr->toString().c_str(), database_ptr->toString().size());
 	close_file();
+}
+
+//--------------------------
+//			save	dataBase	(private)
+//			--------------------------
+void DataBase_Parser::delete_file(string path){														//return error
+
+	if( remove( path.c_str() ) != 0 )
+    	perror( "Error deleting file" );	//return error
+	else
+    	puts( "File successfully deleted" );//return error
 }

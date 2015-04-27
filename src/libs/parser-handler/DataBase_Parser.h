@@ -25,12 +25,14 @@ private:
 	void endTag_event(std::string &tag_name);
 	void endDoc_event();		
 
-	void save_dataBase();
+	void save_dataBase();																//return error
+	void delete_file(std::string path);													//return error
 	
 public:
 		//private caller
-	void parse_dataBase(database_packet &database_arg);
-	void add_doc_to_dataBase(std::string new_path, database_packet &database);			//should return error
+	void parse_dataBase(database_packet &database_arg);									//return error
+	void add_doc_to_dataBase(std::string new_path, database_packet &database);			//return error
+	void remove_doc_from_dataBase(int selection, database_packet &database);			//return error
 
 	DataBase_Parser(IndexHandler &ih) : ih(&ih) {}	
 	~DataBase_Parser(){}

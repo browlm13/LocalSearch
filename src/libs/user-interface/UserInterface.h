@@ -2,6 +2,7 @@
 #define USERINTERFACE_H
 
 #include <string>
+
 #include "query-engine/QueryEngine.h"
 
 class UserInterface {
@@ -20,13 +21,7 @@ public:
 	std::string dataBase_toString();		//calls query engine function
 
 
-
-	/*
-		edit:	gui like functions to be in
-				formatting text namespace.
-												*/
-	
-	//TMP
+	//TMP (display functions to be contained in FormatText namespace)
 	std::string prompt(string prompt);
 	std::string options_box(vector<string> options, std::string title);
 	std::string border(char c, int length);
@@ -35,7 +30,7 @@ public:
 
 #endif	//USERINTERFACE_H
 
-	// ( screens )
+			// ( screens )
 	//homeScreen	//options: (q)uit, (c)onfig , (n)ew
 		//[# of saved doc] 
 	//searchScreen 	//options: (q)uit, (c)onfig, (h)ome, ( (s)ave )

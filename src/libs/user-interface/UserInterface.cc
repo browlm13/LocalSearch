@@ -1,21 +1,29 @@
-#include "UserInterface.h"
-
 #include <sstream>
 #include <vector>
+#include "UserInterface.h"
+
 #include "data-packets/Data_Packets.h"
 #include "formatting/FormatText.h"
 
 using namespace std;
 
-/*
-	things to think about:	doc concistancy when switching screens.
-		 					back and forward screen navigation.
-		 					just like (s)ave can appear and dissapear...
-		 					some letter will always bring you to search
-		 					if avaible from any screen.
-																				*/
+				/*
+					things to think about:	doc concistancy when switching screens.
+								back and forward screen navigation.
+								just like (s)ave can appear and dissapear...
+								some letter will always bring you to search
+								if avaible from any screen.
+															*/
 
 void UserInterface::homeScreen(){
+
+	/*
+		edit:	screens may require a check
+			for open (searchable) files,
+			and/or unsaved files.		*/
+
+
+
 	//header
 	cout << border('=', 100, " local SEARCH ") << endl << endl;
 
