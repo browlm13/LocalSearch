@@ -21,7 +21,8 @@ enum DataStuct_Types{
 };
 
 enum File_Errors{
-	ERROR_DUPLICATE_FILE
+	ERROR_DUPLICATE_FILE,
+	ERROR_OPENING_FILE
 };
 
 //--------------------------

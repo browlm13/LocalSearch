@@ -30,8 +30,12 @@ void IndexHandler::set_dataStruct(int type){
 void IndexHandler::set_savedFlag(bool status)
 	{saved = status;}
 
+bool IndexHandler::get_savedFlag()
+	{return saved;}
+
 void IndexHandler::addWord( word_packet wp )
 	{loader->addWord(wp);}
+
 
 //--------------------------
 //		File Functions:		

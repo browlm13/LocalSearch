@@ -23,7 +23,10 @@ class IndexedDoc_Parser : public XMLShark {
 	IndexHandler *ih;
 
 		//Events (called by Shark)
-	void startDoc_event() {}
+	void startDoc_event() {										//define start doc event in cc
+		cout << "pass database refrence to indexedDoc parser, to set datastruct type durring start doc evenet.";
+		ih->set_dataStruct(DataStuct_Types::AVL);				//line fixes, needs to be passed database_packet database_ptr
+	}
 	void endDoc_event()	{}
 	void startTag_event(std::string &tag_name);			
 	void endTag_event(std::string &tag_name);				
@@ -31,7 +34,7 @@ class IndexedDoc_Parser : public XMLShark {
 public:
 
 		//private caller
-	void parse(string path);
+	void parse(string path);									//needs to be passed
 
 	IndexedDoc_Parser(IndexHandler &ih) 	: ih(&ih) {}	
 	~IndexedDoc_Parser(){}

@@ -20,8 +20,11 @@ private:
 	ParserHandler *ph;
 	IndexHandler *ih;
 	database_packet database;
+
+	//status/statusflags
 	std::string new_path;
 	doc_packet current_doc;
+
 
 	//refreshes or loads database object member
 	void load_dataBase();
@@ -31,12 +34,13 @@ public:
 	QueryEngine(ParserHandler &ph, IndexHandler &ih) : ph(&ph), ih(&ih) {}
 
 	void load_doc(int selection);
-	void add_newDoc(std::string path_to_doc);
+	void add_newDoc(std::string path_to_doc);			//should be titled "load_newDoc"
 	void save_newDoc();
-	void remove_doc(int selection);
+	void remove_doc(int selection);						//should be titled "delete_doc"
 
 	//ui functions
 	database_packet get_dataBase();
+	bool get_savedFlag();
 
 	//maitince mode:
 		//add new Doc(path/to/doc)			//communicates with parser

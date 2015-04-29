@@ -12,14 +12,20 @@ using namespace std;
 //			--------------------------
 
 void QueryEngine::load_dataBase(){
-	ph->parse_dataBase(database);
+	ph->parse_dataBase(database);						//will return error
 }
 
 //--------------------------
 //		public
 //			--------------------------
 
-void QueryEngine::load_doc(int selection){ //{ph.load_doc( dataBase[selection].path_to_IndexedDoc );}
+void QueryEngine::load_doc(int selection){ 
+
+	/*
+		edit: pass database as argumment
+			to load doc as well.
+										*/
+
 	current_doc = database.get_doc(selection);
 	ph->load_doc(current_doc.indexDoc_path);			//will return error
 }
@@ -37,8 +43,14 @@ void QueryEngine::remove_doc(int selection){
 	ph->remove_doc_from_dataBase(selection, database);	//will return error
 }
 
-//user interface funcitons
+//--------------------------
+//		user interface functions
+//			--------------------------
 database_packet QueryEngine::get_dataBase(){
 	load_dataBase();
 	return database;
+}
+
+bool QueryEngine::get_savedFlag(){
+	return ih->get_savedFlag();
 }

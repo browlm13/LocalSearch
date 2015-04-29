@@ -69,13 +69,14 @@ private:
 
 public:
 	//possibly index file locaiton as arg
-	IndexHandler() {}
+	IndexHandler() {saved = true;}
 	~IndexHandler() {}
 
 	void addWord( word_packet wp );
 
 	void 			set_dataStruct( int type );	
 	void 			set_savedFlag( bool status );
+	bool 			get_savedFlag();
 
 	void 			saveIndex 	( std::string path );				//call save on current data structure
 																	//only builder avl needs a save, called by query en.

@@ -25,6 +25,11 @@ public:
 	//delete doc
 	void remove_doc_from_dataBase(int selection, database_packet &database);	//retuen error
 
+
+			/*
+				edit: add database_packet database refrence arg
+					to load doc.								*/
+				
 	//load saved doc
 	void load_doc(std::string path_to_doc);										//return error
 	//load external doc
