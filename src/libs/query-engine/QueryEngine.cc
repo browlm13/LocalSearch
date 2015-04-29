@@ -20,14 +20,8 @@ void QueryEngine::load_dataBase(){
 //			--------------------------
 
 void QueryEngine::load_doc(int selection){ 
-
-	/*
-		edit: pass database as argumment
-			to load doc as well.
-										*/
-
 	current_doc = database.get_doc(selection);
-	ph->load_doc(current_doc.indexDoc_path);			//will return error
+	ph->load_doc(current_doc.indexDoc_path, database);			//will return error
 }
 
 void QueryEngine::add_newDoc(string path_to_doc) {
@@ -47,10 +41,16 @@ void QueryEngine::remove_doc(int selection){
 //		user interface functions
 //			--------------------------
 database_packet QueryEngine::get_dataBase(){
+	//refresh database, clear
+	database.clear();
 	load_dataBase();
 	return database;
 }
 
 bool QueryEngine::get_savedFlag(){
 	return ih->get_savedFlag();
+}
+
+doc_packet QueryEngine::get_cur_doc(){
+	return current_doc;
 }

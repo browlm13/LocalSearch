@@ -29,9 +29,9 @@ public:
 			/*
 				edit: add database_packet database refrence arg
 					to load doc.								*/
-				
+
 	//load saved doc
-	void load_doc(std::string path_to_doc);										//return error
+	void load_doc(std::string path_to_doc, database_packet &database);										//return error
 	//load external doc
 	void add_newDoc(std::string path_to_doc);									//return error
 

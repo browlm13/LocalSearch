@@ -12,6 +12,10 @@ class UserInterface {
 	//dimensions
 	int screen_width;
 
+	//navigation
+	//current_screen
+	//previous_screen
+
 	//cmd handling
 	struct cmd{
 		std::string display_name;
@@ -28,6 +32,7 @@ class UserInterface {
 public:
 	UserInterface(QueryEngine qe) : qe(&qe)	{
 
+		//get screen dimensions
 		screen_width = 120;
 
 		quit.set("(q)uit", "q");
@@ -51,7 +56,7 @@ public:
 
 	//cmd handling
 	void set_cmds(std::vector<cmd> cmds);
-	void run_cmd(std::string cmd);
+	bool run_cmd(std::string cmd);
 
 	//user input helpers
 	bool is_int(std::string in_question);

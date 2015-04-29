@@ -41,6 +41,7 @@ public:
 	//ui functions
 	database_packet get_dataBase();
 	bool get_savedFlag();
+	doc_packet get_cur_doc();
 
 	//maitince mode:
 		//add new Doc(path/to/doc)			//communicates with parser

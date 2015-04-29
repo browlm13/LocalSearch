@@ -246,6 +246,11 @@ struct database_packet {
 	void add_doc_packet(doc_packet dp){indexed_docs.push_back(dp);}
 	//add_doc instead of this ^^^
 
+	//clear
+	void clear(){
+		indexed_docs.clear();
+	}
+
 	//setters and getters
 	std::string 				get_database_path()
 	{return path_to_database + database_filename;}		//returns full path to file

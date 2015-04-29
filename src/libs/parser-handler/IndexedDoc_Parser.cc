@@ -52,5 +52,8 @@ void IndexedDoc_Parser::endTag_event(string &tag_name){
 //--------------------------
 //				parse		
 //			--------------------------
-void IndexedDoc_Parser::parse(string path)		//set database_ptr to database refrence passed in
-	{  _parse(path, 0);	}
+void IndexedDoc_Parser::parse(string path, database_packet &database){
+	database_ptr = &database;
+	ih->set_dataStruct(database_ptr->get_dataStruct_type());
+  	_parse(path, 0);	
+}

@@ -31,6 +31,8 @@ void UserInterface::homeScreen(){
 
 
 	//header
+	system("clear");
+
 	cout << border('=', screen_width, " local SEARCH ", 2) << endl << endl;
 
 	cout << dataBase_toString() << endl;
@@ -38,9 +40,8 @@ void UserInterface::homeScreen(){
 	cout << cmds_toString();
 
 
-
 	//start
-	string ui = prompt("[#]: ");
+	string ui = prompt("\n[#]: ");
 
 	//check if ui is a number
 	if(is_int(ui)){
@@ -48,7 +49,7 @@ void UserInterface::homeScreen(){
 		database_packet database = qe->get_dataBase();
 		//check if there is a corresponding doc
 		if(selection < database.size()){
-				qe->load_doc(selection);		//error return
+				qe->load_doc(selection - 1);		//error return
 				searchScreen();
 		}
 	}
@@ -56,20 +57,6 @@ void UserInterface::homeScreen(){
 		run_cmd(ui);
 	}
 
-	//if command function (display commands)
-
-	//if n
-	//newDocScreen();
-
-
-	//if c
-	//configScreen();
-
-	//if q
-	//quitScreen();
-
-	//tail
-	cout << border('=', screen_width, 0) << endl;
 }
 
 void UserInterface::newDocScreen(){
@@ -102,16 +89,53 @@ void UserInterface::newDocScreen(){
 }
 
 void UserInterface::searchScreen(){
-	cout << "searchScreen" << endl;
+
+		//Search Screen CMDS
+	vector<cmd> searchScreen_cmds;
+	searchScreen_cmds.push_back(home);
+	searchScreen_cmds.push_back(config);
+	searchScreen_cmds.push_back(quit);
+
+	set_cmds(searchScreen_cmds);
+
+	/*
+		edit:	screens may require a check
+			for open (searchable) files,
+			and/or unsaved files.		*/
+
+
+	//header
+	system("clear");
+
+	cout << border('?', screen_width, " search ", 2) << endl << endl;
+
+
+		/*
+			edit:	should have a ui function that displays
+					relevant doc info.						*/
+
+	//TMP
+	cout << qe->get_cur_doc().title << endl;
+
+	cout << cmds_toString();
+
+
+	//start
+	string ui = prompt("\n[query]: ");
+
+	//check if ui is a cmd
+	if(!run_cmd(ui)){
+		//search
+		cout << "searching";
+
+	}
+
 	//string query = prompt("[?query?]: ");
 		//***still working***
 		//*will jump into in*
 		//*-foScreen() if su*
 		//*-sessful.        *
 		//*******************
-
-	//if h
-	//homeScreen();
 
 	/*
 		edit: "s" should only be visible when
@@ -120,12 +144,6 @@ void UserInterface::searchScreen(){
 
 	//if s
 	//qe->save_NewDoc();			//error return
-
-	//if c
-	//configScreen();
-
-	//if q
-	//quitScreen();
 
 	//drops through to info screen if success
 	//infoScreen();
@@ -170,9 +188,8 @@ void UserInterface::set_cmds(vector<cmd> cmds){
 }
 
 
-void UserInterface::run_cmd(string cmd){
-
-	//cmd = FormatText::lower_case(cmd);
+bool UserInterface::run_cmd(string cmd){
+	bool is_cmd = false;
 
 	//make sure it is in current cmd list...
 	bool available = false;
@@ -194,10 +211,11 @@ void UserInterface::run_cmd(string cmd){
 		//new doc
 		if(cmd.compare(newDoc.trigger) == 0)
 			newDocScreen();
-	}
-	else
-		cout << "command not available\n";
 
+		is_cmd = true;
+	}
+
+	return false;
 }
 
 //--------------------------
