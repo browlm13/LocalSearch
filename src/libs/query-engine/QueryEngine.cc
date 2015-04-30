@@ -27,47 +27,13 @@ void QueryEngine::close_docs(){
 }
 
 void QueryEngine::load_doc(int selection){ 
-
-	/*
-		edit: should be no current_doc,
-			just a get open doc function
-			from database (doc_is open())
-			then (get_open())
-											*/
-
 	ph->load_doc(selection, database);
-
-/*
-	//try to work around this
-	current_doc = database.get_doc(selection);
-	ph->load_doc(current_doc.indexDoc_path, database);			//will return error
-*/
 }
 
 void QueryEngine::add_newDoc(string path_to_doc) {
-
 	ph->add_newDoc(path_to_doc, database);
-	//trying to work around new path
-	/*
-	new_path = path_to_doc;
-	ph->add_newDoc(path_to_doc, database);
-	*/
-
-/*
-	//try to work around this
-	current_doc = database.get_doc(database.size() - 1);
-	new_path = path_to_doc;
-	ph->add_newDoc(path_to_doc);						//will return error
-*/
 }
 
-	/*
-		edit: 	make add_doc_to_adatBase
-			not take a new path, just add to
-			database imidealty with original 
-			path stored???
-
-												*/
 void QueryEngine::save_newDoc(){
 	ph->save(database);		//will return error	
 }
@@ -79,18 +45,19 @@ void QueryEngine::remove_doc(int selection){
 //--------------------------
 //		searching
 //			--------------------------
+
 //vector<info_packet> QueryEngine::search(std::string raw_query){
-void QueryEngine::search(std::string raw_query){
+bool QueryEngine::search(std::string raw_query){
+	bool results_found = false;
 	string formatted_query;
-	vector<word_packet> raw_results;
 
-	//TMP
-	raw_results = ih->search(raw_query);
-	for(int i=0; i< raw_results.size();i++){
-		cout << "\nword found: " << raw_results[i].word << ", gtf: " << raw_results[i].globaltf << ", tf: " << raw_results[i].tf << ", path: " << raw_results[i].id.file_path << ", loc: " << raw_results[i].id.byte_location << endl;
-	}
+	wp_results = ih->search(raw_query);
+	ip_results = ph->fetch_info(wp_results, database);
 
-	//vector<info_packet> results;
+	if(ip_results.size() > 0)
+		results_found = true;
+
+	/////////////////////////////////////////////////////
 
 	//format query
 	//formatted_query = FormatTest::format_query(raw_query);
@@ -101,7 +68,7 @@ void QueryEngine::search(std::string raw_query){
 	//get info packets
 	//results = ph->fetch_info(raw_rseults);
 
-	//return results;
+	return results_found;
 }
 
 //--------------------------
@@ -113,4 +80,12 @@ database_packet QueryEngine::get_dataBase(){
 
 bool QueryEngine::get_unsavedFlag(){
 	return database.doc_is_unsaved();
+}
+
+vector<word_packet> QueryEngine::get_wp_results(){
+	return wp_results;
+}
+
+vector<info_packet> QueryEngine::get_ip_results(){
+	return ip_results;
 }

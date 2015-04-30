@@ -37,6 +37,9 @@ void IndexHandler::set_dataStruct(int type){
 		loader = &builder_avl;
 		//loader = new IndexBuilder_Tree;
 	}
+
+	//set result amount
+	loader->set_result_amount(result_amount);
 }
 
 

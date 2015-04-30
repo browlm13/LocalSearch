@@ -77,7 +77,7 @@ void IndexBuilder_Tree::_search( IB_Node*& cur, std::string &query, std::vector<
 
 	else{
 
-		cur->child_tree.topResults(top_results);
+		cur->child_tree.topResults(top_results, result_amount);
 
 		//update globaltf on word packets, only an issue in indexBuilder
 		for(int i=0; i<top_results.size(); i++)

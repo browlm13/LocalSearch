@@ -26,7 +26,7 @@ class UserInterface {
 			trigger = trigger_arg;
 		}
 
-	} quit, home, config, newDoc, save;
+	} quit, home, config, newDoc, back, save;
 	std::vector<cmd> cur_cmds;
 
 public:
@@ -39,10 +39,11 @@ public:
 		home.set("(h)ome", "h");
 		config.set("(c)onfig", "c");
 		newDoc.set("(n)ewDoc", "n");
+		back.set("(b)ack", "b");
 		save.set("(s)ave", "s");
 
 	}
-	
+
 	void init();
 
 	//screens
@@ -55,6 +56,7 @@ public:
 	void pageScreen();
 
 	//display
+	std::string results_toString();
 	std::string dataBase_toString();		//calls query engine function
 	std::string cmds_toString();
 	std::string display_cur_doc();

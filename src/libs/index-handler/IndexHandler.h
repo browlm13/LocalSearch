@@ -46,6 +46,7 @@ class IndexHandler {
 
 private:
 	int dataStruct_type;
+	int result_amount;
 
 	/*
 		edit: currently nessicary because
@@ -66,7 +67,7 @@ private:
 
 public:
 	//possibly index file locaiton as arg
-	IndexHandler() {}
+	IndexHandler() {result_amount = 10;}
 	~IndexHandler() {}
 
 	void 			set_dataStruct( int type );	

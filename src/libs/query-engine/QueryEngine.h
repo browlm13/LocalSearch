@@ -21,8 +21,9 @@ private:
 	IndexHandler *ih;
 	database_packet database;
 
-	//status/statusflags
-	//std::string new_path;
+	//search results
+	vector<word_packet> wp_results;
+	vector<info_packet> ip_results;
 
 public:
 
@@ -34,77 +35,27 @@ public:
 	void save_newDoc();
 	void remove_doc(int selection);						//should be titled "delete_doc"
 
-	//ui functions
-	//std::vector<info_packet> search(std::string raw_query);
-	void search(std::string raw_query);
-
 	//refreshes or loads database object member
 	void load_dataBase();
 
+	//ui functions
+	bool search(std::string raw_query);
+
 	database_packet get_dataBase();
 	bool get_unsavedFlag();
+	vector<word_packet> get_wp_results();
+	vector<info_packet> get_ip_results();
 
+	
 	//maitince mode:
-		//add new Doc(path/to/doc)			//communicates with parser
-			//mabey copies doc into local repository
-			//save index			//calls save index automatically after add newDoc
-		//clear index			//communicates with index
 		//choose index type		//set in index
 
 	//interactive mode:
-		//load index			//load if not correct type
-
 		//query
 			//ih.searchDocs(query_term) //search for each term in query
 			//perform operations
 			//parser.getInfo(word_packet)
 			//display results
-
-	/*
-		edit: use enum for
-			  dataStruct type.
-								*/
-
-								//with style:
-			// ( files: )
-	//dataBase/dataBase.xml					//list of saved docs and their info, and saved config settings
-	//dataBase/index/docName.xml			//indexed version
-	//dataBase/documents/docName.xml		//full version
-
-
-			//( boot/database interface )
-		//query engine
-	//void init();
-		//{
-			//parser handler
-		//vector<doc_packet> parse_dataBase(&dataStruct_type, path/to/doc?);	//changes data struct type
-			//index handler
-		//set_dataStruct(dataStruct);
-		//}
-
-
-			//( searching doc from database )
-		//query engine
-	//void load_database_doc(doc_packet);
-		//{
-			//parser handler
-		//void load_doc( doc_packet.path/to/doc );
-			//(possibly) query engine
-		//void query(raw_query);
-		//}
-
-
-			//( new doc searching )
-		//query engine
-	//void search_newDoc();
-		//{
-			//parser handler
-		//void add_newDoc(path/to/doc);
-			//(possibly)query engine
-		//void query(raw_query);
-			//(possibly)index handler
-		//void save_newDoc();
-		//}
 
 	//void query(raw_query);
 		//{
@@ -126,11 +77,6 @@ public:
 																		*/
 
 			/*
-				//is there a way to do this while saving importaint info??? (ie. the word and tf for each id, ***word packet** tada, word packet for individual docs)
-					//word packets for individual docs with (word, global tf(corresponding to doc_id_packet, doc_id_packet )
-					//more accuratley names doc_word_packet //probaly useful in many places
-					//or mabey something better.. cause doc mean a couple things
-//***page_word_packet*** (already used but needs to be page_retooled and renamed)
 
 				boolean operation:		(id,id,id) + (id,id,id,id) - (id, id) etc...
 										//use doc word packet to store vital info
@@ -164,17 +110,6 @@ public:
 		//}
 
 		//parser handler fetch page(info_packet) //should take an info packet
-
-
-		//saving:
-			/*
-				query engine will remeber the path/to/document that was loaded into the builder tree.
-				it will create a copy and move the doc to its internal spot.
-				it will add an extension to the name and create a blank file in the indexs folder.
-				it will create a key value pair or shome packet for the database original doc its new index doc path
-				when you write it will pass the new index doc path to ih which will pass to builder tree.write(path/to/doc)
-			*/
-
 };
 
 

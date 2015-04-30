@@ -6,7 +6,8 @@
 void IndexLoader_Tree_Child::insert(word_packet &wp)
 	{_insert(child_root, wp);}
 
-void IndexLoader_Tree_Child::topResults(vector<word_packet> &results){
+void IndexLoader_Tree_Child::topResults(vector<word_packet> &results, int result_amount_arg){
+	result_amount = result_amount_arg;
 	int result_count = 0;
 	_topResults( child_root, results, result_count );
 }

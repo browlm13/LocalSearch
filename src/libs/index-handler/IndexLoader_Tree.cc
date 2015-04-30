@@ -46,7 +46,7 @@ void IndexLoader_Tree::_search( IL_Node*& cur, std::string &query, std::vector<w
 			_search( cur->right, query, top_results );
 
 		else{
-			cur->child_tree.topResults(top_results);
+			cur->child_tree.topResults(top_results, result_amount);
 		}
 	}
 }

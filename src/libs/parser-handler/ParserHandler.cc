@@ -32,3 +32,8 @@ void ParserHandler::add_newDoc(string path_to_doc, database_packet &database){		
 	NewDoc_Parser ndp(*ih);
 	ndp.parse(path_to_doc, database);								//error return
 }
+
+vector<info_packet> ParserHandler::fetch_info(std::vector<word_packet> wps, database_packet &database){
+	Info_Parser ip;
+	return ip.parse(wps, database);
+}

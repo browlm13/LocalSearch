@@ -7,7 +7,7 @@
 #include "IndexedDoc_Parser.h"
 #include "DataBase_Parser.h"
 //#include "Page_Parser.h"
-//#include "Info_Parser.h"
+#include "Info_Parser.h"
 #include "../data-packets/Data_Packets.h"
 
 class ParserHandler {
@@ -34,8 +34,9 @@ public:
 
 	//load doc segment
 	page_packet fetch_page(word_packet wp);										//not complete
+	
 	//load doc segments
-	std::vector<info_packet> fetch_info(std::vector<word_packet> wps);			//not complete
+	std::vector<info_packet> fetch_info(std::vector<word_packet> wps, database_packet &database);
 };
 
 

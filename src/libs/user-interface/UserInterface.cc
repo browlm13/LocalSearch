@@ -14,6 +14,10 @@ using namespace std;
 								if avaible from any screen.
 															*/
 
+				/*
+					edit:	need diffrent types of messages
+																*/
+
 //--------------------------
 //		screens
 //			--------------------------
@@ -89,6 +93,12 @@ void UserInterface::homeScreen(){
 						searchScreen();
 					}
 				}
+
+					/*
+						edit:	can this be an unsaved 
+								warning function?
+														*/
+
 		}
 	}
 	else{
@@ -179,17 +189,15 @@ void UserInterface::searchScreen(){
 			edit:	should have a ui function that displays
 					relevant doc info.						*/
 
-	//TMP
+	//TMP should be message
 	if(qe->get_unsavedFlag()){
-		cout << "\nUNSAVED DOCUMENT\n";
+		cout << "\n\t\t\tUNSAVED DOCUMENT\n";
 	}
 	//should display document information
 	cout << display_cur_doc() << endl;
 
-
 	//display comds
 	cout << cmds_toString();
-
 
 	//start
 	string ui = prompt("\n[query]: ");
@@ -197,10 +205,9 @@ void UserInterface::searchScreen(){
 	//check if ui is a cmd
 	if(!run_cmd(ui)){
 		//search
-
-		//TMP
-		cout << "searching for " << ui << "\nfound these: \n";
-		qe->search(ui);
+		//if results found
+		if(qe->search(ui))
+			infoScreen();
 	}
 
 	//string query = prompt("[?query?]: ");
@@ -226,6 +233,7 @@ void UserInterface::configScreen(){
 			//NewDoc Screen CMDS
 	vector<cmd> newDocScreen_cmds;
 	newDocScreen_cmds.push_back(home);
+	newDocScreen_cmds.push_back(config);
 	newDocScreen_cmds.push_back(newDoc);
 	newDocScreen_cmds.push_back(quit);
 
@@ -276,9 +284,38 @@ void UserInterface::quitScreen(){
 	//if you choose not to quit
 	//after warning, brings you
 	//back to screen q was pressed
+	system("clear");
 }
 
-void UserInterface::infoScreen(){}
+void UserInterface::infoScreen(){
+	//Info Screen CMDS
+	vector<cmd> infoScreen_cmds;
+	infoScreen_cmds.push_back(home);
+	infoScreen_cmds.push_back(newDoc);
+	infoScreen_cmds.push_back(back);
+	infoScreen_cmds.push_back(quit);
+
+	set_cmds(infoScreen_cmds);
+
+	//start
+	system("clear");
+
+	cout << border('V', screen_width, " search results ", 2) << endl << endl;
+
+	cout << results_toString();
+/*
+	string ui = prompt("\n[#]: ");
+
+	//check if ui is a number
+	if(is_int(ui)){
+		int selection = atoi( ui.c_str() );
+		cout << "\nOPEN.";
+	}
+	else{
+		run_cmd(ui);
+	}
+*/
+}
 void UserInterface::pageScreen(){}
 
 
@@ -330,7 +367,14 @@ bool UserInterface::run_cmd(string cmd){
 			//tmp
 			homeScreen();
 		}
-
+		//back
+		if(cmd.compare(back.trigger) == 0){
+			//will return to previous 
+			//screen
+			//tmp
+			cout << "\nback";
+			
+		}
 		is_cmd = true;
 	}
 
@@ -357,12 +401,46 @@ string UserInterface::cmds_toString(){
 	return  command_box;
 }
 
+string UserInterface::results_toString(){
+
+	/*
+		edit: need a way to keep
+		track of the page your on and 
+		the result count so far.
+
+										*/
+	string s;
+	vector<word_packet> word_packet_results = qe->get_wp_results();
+	vector<info_packet> paginated_results = qe->get_ip_results();
+	int page_max = 5;
+
+	s += "\nSearch terms: ";
+
+	for(int i=0; i< word_packet_results.size();i++){
+		s += " ";
+		s += word_packet_results[i].word;
+	}
+
+	s += "\n\n";
+
+	for(int i=0; i< page_max; i++){
+		s += border('-', screen_width/2, FormatText::to_string(i + 1));
+		s += "\n[";
+		s += FormatText::to_string(i + 1);
+		s += "]";
+		s += paginated_results[i].toString();
+		s += border('-', screen_width/2, FormatText::to_string(i + 1));
+		s += "\n";
+	}
+
+	return s;
+}
+
 string UserInterface::dataBase_toString(){
 	string s;
 	database_packet dataBase;
 	vector<string> saved_docs;
 
-	//refresh then get
 	dataBase = qe->get_dataBase();
 
 	if(dataBase.size() > 0){

@@ -39,12 +39,10 @@ class IndexLoader_Tree_Child : public avl<IL_Node_Child> {
 public:
 
 	void insert(word_packet &wp);
-	void topResults(std::vector<word_packet> &results);
-	void set_result_amount(int new_result_amount) {result_amount = new_result_amount;}
+	void topResults(std::vector<word_packet> &results, int result_amount_arg);
 
-	IndexLoader_Tree_Child()	: 
-			child_root(0), result_amount(3)	{ };						//tmp*** init result amount
-	~IndexLoader_Tree_Child()	{ }									//not sure what needs to be done here
+	IndexLoader_Tree_Child()	: child_root(0){ };
+	~IndexLoader_Tree_Child()	{ }	
 	
 };
 

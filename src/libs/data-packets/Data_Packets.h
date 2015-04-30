@@ -133,7 +133,30 @@ struct page_packet;
 //--------------------------
 //		Info Packet	
 //			--------------------------
-struct info_packet;
+struct info_packet{
+	doc_id_packet id;
+	std::string title;
+	string contributors;
+	std::string text;
+
+	void clear(){
+		title = "no title";
+		contributors = "no contributors";
+		text = "no text";
+	}
+
+	std::string toString(){
+		string s;
+		s += "\n\t\t[";
+		s += title;
+		s += ", ";
+		s += contributors;
+		s += ".]\n\t ";
+		s += text;
+		s += "\n";
+		return s;
+	}
+};
 
 //--------------------------
 //		Doc Packet	
@@ -297,43 +320,13 @@ struct database_packet {
 		indexed_docs.clear();
 	}
 
-	//setters and getters
-
-	/*
-		edit: saved flag should 
-		only be accessible through
-		particualr doc type constructors document constructor.
-		const.
-																*/
-
 	//flags	
-/*
-	//TMP
-	void set_savedFlag(std::string path, bool state){
-		string document_to_check = remove_path(path);
-
-		for(int i= 0; i < indexed_docs.size(); i++){
-			if (document_to_check.compare(indexed_docs[i].title) == 0)
-				indexed_docs[i].savedFlag = state;
-		}
-	}
-	//TMP
-*/
 	void set_openFlag(std::string path, bool state){
 		string document_to_check = remove_path(path);
-
-				//TMP***
-		std::cout << "\n set_openFlag() called:\n ";
-				//TMP***
-
 
 		for(int i= 0; i < indexed_docs.size(); i++){
 			if (document_to_check.compare(indexed_docs[i].title) == 0){
 				indexed_docs[i].openFlag = state;
-
-						//TMP***
-				std::cout << "open path match: " << indexed_docs[i].title << ", state== " << indexed_docs[i].openFlag;
-						//TMP***
 			}
 		}
 	}
@@ -349,28 +342,18 @@ struct database_packet {
 		}	
 	}
 
-	//get open document, unfortunatley requires two funcitons
 	//check for open doc
 	bool doc_is_open(){
 		bool is_open = false;
 
-				//TMP***
-		std::cout << "\n open files: ";
-				//TMP***
-
 		for(int i= 0; i < indexed_docs.size(); i++){
-
-						//TMP***
-			std::cout << indexed_docs[i].openFlag << " ";
-						//TMP***
-
 			if (indexed_docs[i].openFlag == true)
 				is_open = true;
 		}
 
 		return is_open;
 	}
-	//check for open doc
+	//check for open doc at index
 	bool doc_is_open(int index){
 		bool is_open = false;
 
@@ -384,11 +367,6 @@ struct database_packet {
 		bool is_unsaved = false;
 
 		for(int i= 0; i < indexed_docs.size(); i++){
-
-						//TMP***
-			std::cout << indexed_docs[i].savedFlag << " ";
-						//TMP***
-
 			if (indexed_docs[i].savedFlag == false)
 				is_unsaved = true;
 		}
@@ -411,24 +389,40 @@ struct database_packet {
 		}
 	}
 
-	std::string 				get_database_path()
+	std::string get_database_path()
 	{return path_to_database + database_filename;}		//returns full path to file
 
-	void 						set_dataStruct_type(int type)
+	void set_dataStruct_type(int type)
 	{dataStruct_type = type;}
-	int 						get_dataStruct_type()
+	int get_dataStruct_type()
 	{return dataStruct_type;}
 
-	void 						set_indexed_docs(std::vector<doc_packet> i_d)
+	void set_indexed_docs(std::vector<doc_packet> i_d)
 	{indexed_docs = i_d;}
-	std::vector<doc_packet> 	get_indexed_docs()
+	std::vector<doc_packet> get_indexed_docs()
 	{return indexed_docs;}
 
-	int							size()
+	int	size()
 	{return indexed_docs.size();}
 
-	doc_packet 					get_doc(int index)
+	doc_packet 	get_doc(int index)
 	{return indexed_docs[index];}
+
+	//finds the full document path from matching info
+	std::string get_fullDoc_path(std::string path){
+		string title = remove_path(path);
+		bool found = false;
+
+		//return full path
+		for(int i = 0; i < indexed_docs.size(); i++){
+			if(title.compare(indexed_docs[i].title) == 0){
+				return indexed_docs[i].fullDoc_path;
+				found = true;
+			}
+		}
+		if (!found)
+			std::cout << "document not recognized in database\n";
+	}
 
 	//to string
 	std::string toString(){
