@@ -8,14 +8,19 @@ void ParserHandler::parse_dataBase(database_packet &database){								//return e
 	dbp.parse_dataBase(database);						//error return
 }
 
-void ParserHandler::load_doc(std::string path_to_doc, database_packet &database){										//return error
-	IndexedDoc_Parser idp(*ih);
-	idp.parse(path_to_doc, database);								//error return
+void ParserHandler::close_docs(database_packet &database){
+	DataBase_Parser dbp(*ih);
+	dbp.close_docs(database);
 }
 
-void ParserHandler::add_doc_to_dataBase(std::string new_path, database_packet &database){	//return error
+void ParserHandler::load_doc(int selection, database_packet &database){										//return error
+	IndexedDoc_Parser idp(*ih);
+	idp.parse(selection, database);																					//error return
+}
+
+void ParserHandler::save(database_packet &database){	//return error
 	DataBase_Parser dbp(*ih);
-	dbp.add_doc_to_dataBase(new_path, database);		//error return
+	dbp.save(database);		//error return
 }
 
 void ParserHandler::remove_doc_from_dataBase(int selection, database_packet &database){		//return error
@@ -23,7 +28,7 @@ void ParserHandler::remove_doc_from_dataBase(int selection, database_packet &dat
 	dbp.remove_doc_from_dataBase(selection, database);	//error return
 }
 
-void ParserHandler::add_newDoc(string path_to_doc){											//return error
+void ParserHandler::add_newDoc(string path_to_doc, database_packet &database){											//return error
 	NewDoc_Parser ndp(*ih);
-	ndp.parse(path_to_doc);								//error return
+	ndp.parse(path_to_doc, database);								//error return
 }

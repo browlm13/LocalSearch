@@ -37,15 +37,6 @@ newDoc_addWord( string word, doc_id_packet id, int tf )				{	// calculates globa
 #include <iostream>
 #include <cstdlib>
 
-//TMP****
-//#include "porter2-stemmer/porter2_stemmer.h"
-
-/*
-	edit: clean up interface class.
-		  possibly include builder
-		  avl.
-										*/
-
 #include "IndexBuilder_Tree.h"
 #include "IndexLoader_Tree.h"
 
@@ -54,13 +45,19 @@ using namespace std;
 class IndexHandler {
 
 private:
-	bool saved;
 	int dataStruct_type;
 
-	//is this the only way??
-	//IndexLoader_Tree			loader_avl;
+	/*
+		edit: currently nessicary because
+			there is know new gaurd;
+			if a something like an emptyFlag is
+			use to gaurd clear() and settype()
+			then new may be used					*/
+
+	//test tmp
+	IndexLoader_Tree			loader_avl;
 	//IndexLoader_Hash			loader_hash;
-	//IndexBuilder_Tree 			builder_avl;
+	IndexBuilder_Tree 			builder_avl;
 
 	IndexLoader_Interface		*loader;
 
@@ -69,28 +66,20 @@ private:
 
 public:
 	//possibly index file locaiton as arg
-	IndexHandler() {saved = true;}
+	IndexHandler() {}
 	~IndexHandler() {}
 
+	void 			set_dataStruct( int type );	
+
+	//setup
 	void addWord( word_packet wp );
 
-	void 			set_dataStruct( int type );	
-	void 			set_savedFlag( bool status );
-	bool 			get_savedFlag();
+	//maintinence
+	void 			saveIndex 	( std::string path );
+	void 			close 		();
 
-	void 			saveIndex 	( std::string path );				//call save on current data structure
-																	//only builder avl needs a save, called by query en.
-																	//save index will write to a specified file
-
-
-	void 			loadIndex 	();				//integrate choice with set_data_structure()
-	void 			clearIndex 	();				//problem fstream cannot be located in ih, could
-												//have fstream fuction namespace ie:open, close clear
-	word_packet 	searchDocs 		( const string &query_term );
-
-	//tmp
-	void tmp_search(string q);
-	//tmp
+	//searching
+	vector<word_packet> 	search 		( const string query_term );
 };
 
 

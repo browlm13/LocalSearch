@@ -55,31 +55,78 @@ void DataBase_Parser::parse_dataBase(database_packet &database_arg){								//re
 	database_ptr = &database_arg;
 	_parse(database_ptr->get_database_path(), 0);
 }
+//--------------------------
+//			close	docs	
+//			--------------------------
+void DataBase_Parser::close_docs(database_packet &database_arg){								//return error
+	database_ptr = &database_arg;
+	database_ptr->close();
+	ih->close();
+}
 
 //--------------------------
 //		add	doc to dataBase	
 //			--------------------------
 //creates the files, copies, adds and updates, calls ih save with new index file
-void DataBase_Parser::add_doc_to_dataBase(std::string new_path, database_packet &database){			//return error
+void DataBase_Parser::save(database_packet &database){			//return error
+
+	/*
+		edit:	will save all  if(unsaved && open)  files
+															*/
 	database_ptr = &database;
-	database_ptr->add_doc(new_path);
-	save_dataBase();
-	dp = database_ptr->get_doc(database.size() - 1);
 
-	//copy file to full file to internal database (dp.fullDoc_path)
-		//if not already there...(should handle duplicate names later)
-		if(dp.fullDoc_path.compare(new_path) != 0){
+	//if there are unsaved documents
+	if(database_ptr->doc_is_unsaved()){
+		doc_packet unsaved_doc;
 
-		    std::ifstream  src(new_path, std::ios::binary);
-     		std::ofstream  dst(dp.fullDoc_path,   std::ios::binary);
+		unsaved_doc = database_ptr->get_unsaved();
 
-     		dst << src.rdbuf();
-     		dst.close();
-     	}
-     	else{}//return ERROR_DUPLICATE_FILE;
+		//if no duplicate names
+		if(database_ptr->add_doc(unsaved_doc.title)){
+			doc_packet new_doc;
 
-	ih->saveIndex(dp.indexDoc_path);
+			//add new file to resevoir
+			save_dataBase();
+			new_doc = database_ptr->get_doc(database.size() - 1);
+
+		    std::ifstream  src(unsaved_doc.fullDoc_path, std::ios::binary);
+	 		std::ofstream  dst(new_doc.fullDoc_path,   std::ios::binary);
+
+	 		dst << src.rdbuf();
+	 		dst.close();
+
+	 		ih->saveIndex(new_doc.indexDoc_path);
+		}else{
+			cout << "duplicate file name" << endl;
+		}
+
+	} else{
+		cout << "no unsaved documents." << endl;
+	}
+	//if(database_ptr->add_doc())
+	/*
+	if(database_ptr->add_doc(new_path)){
+		save_dataBase();
+		dp = database_ptr->get_doc(database.size() - 1);
+
+	    std::ifstream  src(new_path, std::ios::binary);
+ 		std::ofstream  dst(dp.fullDoc_path,   std::ios::binary);
+
+ 		dst << src.rdbuf();
+ 		dst.close();
+
+ 		ih->saveIndex(dp.indexDoc_path);
+
+ 			//set saved flag
+		database_ptr->set_savedFlag(dp.title, true);
+
+ 	} else{
+ 			//TMP error handling
+     		perror( "Error duplicate file" );
+     	}//return ERROR_DUPLICATE_FILE;
+    */
 }
+
 //--------------------------
 //		remove	doc from dataBase	
 //			--------------------------
@@ -87,20 +134,25 @@ void DataBase_Parser::add_doc_to_dataBase(std::string new_path, database_packet 
 void DataBase_Parser::remove_doc_from_dataBase(int selection, database_packet &database){			//return error
 	database_ptr = &database;
 	dp = database_ptr->get_doc(selection);
+
 	//delete index file 				//error exit and return
 	delete_file(dp.indexDoc_path);
+
 	//delete documents file 			//error exit and return
 	delete_file(dp.fullDoc_path);
-	database_ptr->remove_doc(selection);
-	save_dataBase();					//error exit and return
 
+	//delete from database list
+	database_ptr->remove_doc(selection);
+
+	save_dataBase();					//error exit and return
 }
 
 //--------------------------
 //			save	dataBase	(private)
 //			--------------------------
-void DataBase_Parser::save_dataBase(){																//return error
-	open_file(database_ptr->get_database_path());
+void DataBase_Parser::save_dataBase(){
+	//open and empty													//return error
+	open_empty_file(database_ptr->get_database_path());
 	file.write(database_ptr->toString().c_str(), database_ptr->toString().size());
 	close_file();
 }

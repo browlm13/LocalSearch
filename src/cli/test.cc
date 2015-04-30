@@ -151,7 +151,7 @@ int main(){
     //string test_path_index = "../database/index/index-testDoc0.xml";
 
     //start up example
-    ui.homeScreen();
+    ui.init();
     //cout << ui.dataBase_toString();
 
     //enters new doc path

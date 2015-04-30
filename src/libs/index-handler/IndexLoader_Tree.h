@@ -45,7 +45,7 @@ class IndexLoader_Tree : public avl<IL_Node>, public IndexLoader_Interface {
 public:
 
 	void addWord( word_packet &wp );				
-	void search(std::string &querty, std::vector<word_packet> &top_results);
+	void search(std::string query, std::vector<word_packet> &top_results);
 	void clear();
 
 

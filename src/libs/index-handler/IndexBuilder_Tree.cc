@@ -24,8 +24,7 @@ void IndexBuilder_Tree::clear()
 //			--------------------------
 
 void IndexBuilder_Tree::_addWord( IB_Node*& cur, word_packet &wp ){	
-	//TMP
-	//cout << wp.word << endl;
+
 	if(!cur){
 		cur = new IB_Node( wp );
 		cur->parent_wp.globaltf = wp.tf;

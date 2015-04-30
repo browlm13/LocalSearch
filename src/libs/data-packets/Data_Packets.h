@@ -15,8 +15,8 @@
 
 enum DataStuct_Types{
 	//possible datastucts
-	AVL,
 	HASH,
+	AVL,
 	BUILDER
 };
 
@@ -79,15 +79,15 @@ struct word_packet{
 	std::string parent_head_toString(){
 		std::string s;
 
-		s += "<w>\n";
+		s += "<w>";
 
-		s += "\t<t>";
+		s += "<t>";
 		s += word;
-		s += "</t>\n";
+		s += "</t>";
 
-		s += "\t<gtf>";
+		s += "<gtf>";
 		s += FormatText::to_string(globaltf);
-		s += "</gtf>\n";
+		s += "</gtf>";
 
 		return s;
 	}
@@ -105,21 +105,21 @@ struct word_packet{
 	std::string child_toString(){
 		std::string s;
 
-		s += "\t<e>\n";
+		s += "\n<e>";
 
-		s += "\t\t<tf>";
+		s += "<tf>";
 		s += FormatText::to_string(tf);
-		s += "</tf>\n";
+		s += "</tf>";
 
-		s += "\t\t<l>";
+		s += "<l>";
 		s += FormatText::to_string(id.byte_location);
-		s += "</l>\n";
+		s += "</l>";
 
-		s += "\t\t<p>";
+		s += "<p>";
 		s += id.file_path;
-		s += "</p>\n";
+		s += "</p>";
 
-		s += "\t</e>\n";
+		s += "</e>";
 
 		return s;
 	}
@@ -143,6 +143,20 @@ struct doc_packet{
 	std::string title;
 	std::string fullDoc_path;
 	std::string indexDoc_path;
+
+	//flags
+	const bool savedFlag;
+	bool openFlag;
+
+		//( constructors )
+
+	//saved document constructor (saved always true)
+	doc_packet() : savedFlag(true), openFlag(false) {}
+
+	//tmp document constructor 	 (saved always false)
+	doc_packet(bool tmp_document) : savedFlag(false), openFlag(true) {
+		indexDoc_path = "TMP_DOC_UNSAVED";
+	}
 
 		//overloads
 	doc_packet& operator=( const doc_packet &rhs ){
@@ -228,23 +242,45 @@ struct database_packet {
 	//copy constructor/=operator
 	//destructor
 
-	//add a new document
-	void add_doc(std::string original_path){
+	//add a new document (saved)
+	bool add_doc(std::string original_path){
 		doc_packet dp;
 		dp.title = remove_path(original_path);
 		dp.fullDoc_path = path_to_fullDoc + dp.title;
 		dp.indexDoc_path = path_to_indexDoc + index_prefix + dp.title;
+
+		//check if allready there, return false if a match
+		bool not_duplicate = true;
+		for(int i= 0; i < indexed_docs.size(); i++){
+			if (dp.title.compare(indexed_docs[i].title) == 0)
+				not_duplicate = false;
+		}
+		if(not_duplicate)
+			indexed_docs.push_back(dp);
+		return not_duplicate;
+	}
+
+	//add a temporary document (unsaved)
+	void add_tmp_doc(std::string original_path){
+		doc_packet dp(true);
+		dp.title = remove_path(original_path);
+		dp.fullDoc_path = original_path;
 		indexed_docs.push_back(dp);
 	}
 
 	//remove a document
-	void remove_doc(int index)
-	{indexed_docs.erase( indexed_docs.begin() + (index -1) );}
+	void remove_doc(int index){
+		vector<doc_packet> new_index_list;
 
-	//can i delete this vvv???
-	//add_doc instead of this vvv
-	void add_doc_packet(doc_packet dp){indexed_docs.push_back(dp);}
-	//add_doc instead of this ^^^
+		for(int i=0; i < index; i++){
+			new_index_list.push_back(indexed_docs[i]);
+		}
+		for(int i= index +1; i < indexed_docs.size(); i++){
+			new_index_list.push_back(indexed_docs[i]);
+		}
+		indexed_docs.clear();
+		indexed_docs = new_index_list;
+	}
 
 	//clear
 	void clear(){
@@ -252,6 +288,119 @@ struct database_packet {
 	}
 
 	//setters and getters
+
+	/*
+		edit: saved flag should 
+		only be accessible through
+		particualr doc type constructors document constructor.
+		const.
+																*/
+
+	//flags	
+/*
+	//TMP
+	void set_savedFlag(std::string path, bool state){
+		string document_to_check = remove_path(path);
+
+		for(int i= 0; i < indexed_docs.size(); i++){
+			if (document_to_check.compare(indexed_docs[i].title) == 0)
+				indexed_docs[i].savedFlag = state;
+		}
+	}
+	//TMP
+*/
+	void set_openFlag(std::string path, bool state){
+		string document_to_check = remove_path(path);
+
+				//TMP***
+		std::cout << "\n set_openFlag() called:\n ";
+				//TMP***
+
+
+		for(int i= 0; i < indexed_docs.size(); i++){
+			if (document_to_check.compare(indexed_docs[i].title) == 0){
+				indexed_docs[i].openFlag = state;
+
+						//TMP***
+				std::cout << "open path match: " << indexed_docs[i].title << ", state== " << indexed_docs[i].openFlag;
+						//TMP***
+			}
+		}
+	}
+
+	//sets all doc flags to close
+	void close(){
+		for(int i= 0; i < indexed_docs.size(); i++){
+			if(indexed_docs[i].savedFlag == false)
+				remove_doc(i);
+		}
+		for(int i= 0; i < indexed_docs.size(); i++){
+			indexed_docs[i].openFlag = false;
+		}	
+	}
+
+	//get open document, unfortunatley requires two funcitons
+	//check for open doc
+	bool doc_is_open(){
+		bool is_open = false;
+
+				//TMP***
+		std::cout << "\n open files: ";
+				//TMP***
+
+		for(int i= 0; i < indexed_docs.size(); i++){
+
+						//TMP***
+			std::cout << indexed_docs[i].openFlag << " ";
+						//TMP***
+
+			if (indexed_docs[i].openFlag == true)
+				is_open = true;
+		}
+
+		return is_open;
+	}
+	//check for open doc
+	bool doc_is_open(int index){
+		bool is_open = false;
+
+		if (indexed_docs[index].openFlag == true)
+			is_open = true;
+
+		return is_open;
+	}
+	//check for unsaved doc
+	bool doc_is_unsaved(){
+		bool is_unsaved = false;
+
+		for(int i= 0; i < indexed_docs.size(); i++){
+
+						//TMP***
+			std::cout << indexed_docs[i].savedFlag << " ";
+						//TMP***
+
+			if (indexed_docs[i].savedFlag == false)
+				is_unsaved = true;
+		}
+
+		return is_unsaved;
+	}
+	//return open doc
+	doc_packet get_open(){
+		for(int i= 0; i < indexed_docs.size(); i++){
+			if (indexed_docs[i].openFlag == true)
+				return indexed_docs[i];
+		}
+	}
+
+	//return unsaved doc
+	doc_packet get_unsaved(){
+		for(int i= 0; i < indexed_docs.size(); i++){
+			if (indexed_docs[i].savedFlag == false)
+				return indexed_docs[i];
+		}
+	}
+
 	std::string 				get_database_path()
 	{return path_to_database + database_filename;}		//returns full path to file
 
@@ -281,8 +430,10 @@ struct database_packet {
 		s += FormatText::to_string(dataStruct_type);
 		s += "</dataStruct_type>\n";
 
-		for(int i=0; i < indexed_docs.size(); i++)
-			s += indexed_docs[i].toString();
+		for(int i=0; i < indexed_docs.size(); i++){
+			if(indexed_docs[i].savedFlag == true)
+				s += indexed_docs[i].toString();
+		}
 
 		s += "</database>";
 		return s;

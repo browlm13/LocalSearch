@@ -22,26 +22,27 @@ private:
 	database_packet database;
 
 	//status/statusflags
-	std::string new_path;
-	doc_packet current_doc;
-
-
-	//refreshes or loads database object member
-	void load_dataBase();
+	//std::string new_path;
 
 public:
 
 	QueryEngine(ParserHandler &ph, IndexHandler &ih) : ph(&ph), ih(&ih) {}
 
+	void close_docs();
 	void load_doc(int selection);
 	void add_newDoc(std::string path_to_doc);			//should be titled "load_newDoc"
 	void save_newDoc();
 	void remove_doc(int selection);						//should be titled "delete_doc"
 
 	//ui functions
+	//std::vector<info_packet> search(std::string raw_query);
+	void search(std::string raw_query);
+
+	//refreshes or loads database object member
+	void load_dataBase();
+
 	database_packet get_dataBase();
-	bool get_savedFlag();
-	doc_packet get_cur_doc();
+	bool get_unsavedFlag();
 
 	//maitince mode:
 		//add new Doc(path/to/doc)			//communicates with parser

@@ -14,6 +14,14 @@ using namespace std;
 								if avaible from any screen.
 															*/
 
+//--------------------------
+//		screens
+//			--------------------------
+void UserInterface::init(){
+	qe->load_dataBase();
+	homeScreen();
+}
+
 void UserInterface::homeScreen(){
 
 	//Home Screen CMDS
@@ -48,9 +56,14 @@ void UserInterface::homeScreen(){
 		int selection = atoi( ui.c_str() );
 		database_packet database = qe->get_dataBase();
 		//check if there is a corresponding doc
-		if(selection < database.size()){
-				qe->load_doc(selection - 1);		//error return
-				searchScreen();
+		if(selection <= database.size()){
+				//if document is already open
+				if(database.doc_is_open(selection - 1)){
+					searchScreen();
+				}else{
+					qe->load_doc(selection - 1);		//error return
+					searchScreen();
+				}
 		}
 	}
 	else{
@@ -60,7 +73,34 @@ void UserInterface::homeScreen(){
 }
 
 void UserInterface::newDocScreen(){
-	cout << "newDocScreen" << endl;
+		//NewDoc Screen CMDS
+	vector<cmd> newDocScreen_cmds;
+	newDocScreen_cmds.push_back(home);
+	newDocScreen_cmds.push_back(config);
+	newDocScreen_cmds.push_back(quit);
+
+	set_cmds(newDocScreen_cmds);
+
+	//start
+	system("clear");
+
+	cout << border('*', screen_width, " open a new document? ", 2) << endl << endl;
+
+	cout << cmds_toString();
+
+	string ui = prompt("\n[path]: ");
+
+	//check if ui is a cmd
+	if(!run_cmd(ui)){
+		//search
+
+		//TMP
+		cout << "opening " << ui << endl;
+		qe->add_newDoc(ui);
+	}
+
+	searchScreen();
+
 	/*
 		edit:		if you must search cmds
 					use quotes.				*/
@@ -115,8 +155,14 @@ void UserInterface::searchScreen(){
 					relevant doc info.						*/
 
 	//TMP
-	cout << qe->get_cur_doc().title << endl;
+	if(qe->get_unsavedFlag()){
+		cout << "\nUNSAVED DOCUMENT\n";
+	}
+	//should display document information
+	cout << display_cur_doc() << endl;
 
+
+	//display comds
 	cout << cmds_toString();
 
 
@@ -126,8 +172,10 @@ void UserInterface::searchScreen(){
 	//check if ui is a cmd
 	if(!run_cmd(ui)){
 		//search
-		cout << "searching";
 
+		//TMP
+		cout << "searching for " << ui << "\nfound these: \n";
+		qe->search(ui);
 	}
 
 	//string query = prompt("[?query?]: ");
@@ -150,7 +198,42 @@ void UserInterface::searchScreen(){
 }
 
 void UserInterface::configScreen(){
-	cout << "configScreen" << endl;
+			//NewDoc Screen CMDS
+	vector<cmd> newDocScreen_cmds;
+	newDocScreen_cmds.push_back(home);
+	newDocScreen_cmds.push_back(newDoc);
+	newDocScreen_cmds.push_back(quit);
+
+	set_cmds(newDocScreen_cmds);
+
+	//start
+	system("clear");
+
+	cout << border('%', screen_width, " configuration ", 2) << endl << endl;
+
+	cout << dataBase_toString() << endl;
+
+	cout << cmds_toString();
+
+
+	//start
+	string ui = prompt("\n[# to delete]: ");
+
+	//check if ui is a number
+	if(is_int(ui)){
+		int selection = atoi( ui.c_str() );
+		database_packet database = qe->get_dataBase();
+
+		//check if there is a corresponding doc
+		if(selection <= database.size()){
+				qe->remove_doc(selection - 1);		//error return
+				configScreen();
+		}
+	}
+	else{
+		run_cmd(ui);
+	}
+
 	//string settings = prompt("[set]: ");
 		//***still working***
 
@@ -173,6 +256,10 @@ void UserInterface::quitScreen(){
 void UserInterface::infoScreen(){}
 void UserInterface::pageScreen(){}
 
+
+
+
+
 //--------------------------
 //		command handling
 //			--------------------------
@@ -183,7 +270,7 @@ void UserInterface::set_cmds(vector<cmd> cmds){
 		cur_cmds.push_back(cmds[i]);
 	}
 
-	if(!qe->get_savedFlag())
+	if(qe->get_unsavedFlag())
 		cur_cmds.push_back(save);
 }
 
@@ -211,12 +298,20 @@ bool UserInterface::run_cmd(string cmd){
 		//new doc
 		if(cmd.compare(newDoc.trigger) == 0)
 			newDocScreen();
+		//save
+		if(cmd.compare(newDoc.trigger) == 0){
+			qe->save_newDoc();
+			//tmp
+			homeScreen();
+		}
 
 		is_cmd = true;
 	}
 
-	return false;
+	return is_cmd;
 }
+
+
 
 //--------------------------
 //		toString	
@@ -245,13 +340,46 @@ string UserInterface::dataBase_toString(){
 	dataBase = qe->get_dataBase();
 
 	if(dataBase.size() > 0){
-		for(int i = 0 ; i < dataBase.indexed_docs.size(); i++)
-			saved_docs.push_back(dataBase.indexed_docs[i].title);
+		for(int i = 0 ; i < dataBase.indexed_docs.size(); i++){
+			string display_title;
 
-		s = options_box(saved_docs, " Saved Documents ", screen_width, 1 );
+			//if open
+			if(dataBase.indexed_docs[i].openFlag){
+				doc_packet dp = dataBase.get_open();
+				display_title += ">>";
+			}
+
+			display_title += dataBase.indexed_docs[i].title;
+
+			//if unsaved
+			if(!dataBase.indexed_docs[i].savedFlag)
+				display_title += " (unsaved)";
+	
+			saved_docs.push_back(display_title);
+		}
+
+		s = options_box(saved_docs, " Database ", screen_width, 1 );
 	}
 	else
-		s = "No saved Documents";
+		s = "No Documents";
+
+	return s;
+}
+
+//display current doc
+string UserInterface::display_cur_doc(){
+	string s;
+	database_packet dataBase = qe->get_dataBase();
+
+	//doc information
+	if(dataBase.doc_is_open()){
+		doc_packet dp = dataBase.get_open();
+		s += "DOCUMENT TITLE: ";
+		s += dp.title;
+	}
+	else{
+		s += "NO OPEN DOCUMENTS";
+	}
 
 	return s;
 }

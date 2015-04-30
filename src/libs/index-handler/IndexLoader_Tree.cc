@@ -4,11 +4,10 @@
 //				public
 //			--------------------------
 
-//TMP cout
 void IndexLoader_Tree::addWord(word_packet &wp)
 	{_addWord(root, wp);}
 
-void IndexLoader_Tree::search( std::string &query, std::vector<word_packet> &top_results )
+void IndexLoader_Tree::search(std::string query, std::vector<word_packet> &top_results)
 	{_search(root, query, top_results);}
 
 void IndexLoader_Tree::clear()
@@ -37,16 +36,17 @@ void IndexLoader_Tree::_addWord( IL_Node*& cur, word_packet &wp ){
 
 void IndexLoader_Tree::_search( IL_Node*& cur, std::string &query, std::vector<word_packet> &top_results ){
 
-	//insert when null, then insert into child tree
-	if( !cur ){}
+	if( cur ){
 
-	//otherwise advance left or right
-	else if( query.compare( cur->parent_wp.word ) < 0 )
-		_search( cur->left, query, top_results);
+		//otherwise advance left or right
+		if( query.compare( cur->parent_wp.word ) < 0 )
+			_search( cur->left, query, top_results);
 
-	else if( query.compare( cur->parent_wp.word ) > 0 )
-		_search( cur->right, query, top_results );
+		else if( query.compare( cur->parent_wp.word ) > 0 )
+			_search( cur->right, query, top_results );
 
-	else
-		cur->child_tree.topResults(top_results);
+		else{
+			cur->child_tree.topResults(top_results);
+		}
+	}
 }

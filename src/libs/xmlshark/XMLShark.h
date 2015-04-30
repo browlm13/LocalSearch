@@ -60,6 +60,7 @@ protected:
 
 		//( Files )
 	void open_file(string file_name);
+	void open_empty_file(string file_path);
 	void close_file();
 	string get_path()	{	return path_name;	}
 

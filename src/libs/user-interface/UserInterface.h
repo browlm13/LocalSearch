@@ -42,7 +42,10 @@ public:
 		save.set("(s)ave", "s");
 
 	}
+	
+	void init();
 
+	//screens
 	void homeScreen();
 	void searchScreen();
 	void newDocScreen();
@@ -51,8 +54,10 @@ public:
 	void infoScreen();
 	void pageScreen();
 
+	//display
 	std::string dataBase_toString();		//calls query engine function
 	std::string cmds_toString();
+	std::string display_cur_doc();
 
 	//cmd handling
 	void set_cmds(std::vector<cmd> cmds);

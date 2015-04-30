@@ -33,6 +33,7 @@ private:
 	} wm;
 
 	IndexHandler *ih;
+	database_packet *database_ptr;
 
 
 		//Events (called by Shark)
@@ -43,7 +44,7 @@ private:
 	
 public:
 		//private caller
-	void parse(string path);
+	void parse(std::string path, database_packet &database);	
 
 	NewDoc_Parser(IndexHandler &ih) : ih(&ih), wm(ih) {}	
 	~NewDoc_Parser(){}

@@ -20,7 +20,7 @@ private:
 	doc_packet dp;
 
 		//Events (called by Shark)
-	void startDoc_event() {}
+	void startDoc_event() {database_ptr->clear();}
 	void startTag_event(std::string &tag_name);			
 	void endTag_event(std::string &tag_name);
 	void endDoc_event();		
@@ -31,7 +31,8 @@ private:
 public:
 		//private caller
 	void parse_dataBase(database_packet &database_arg);									//return error
-	void add_doc_to_dataBase(std::string new_path, database_packet &database);			//return error
+	void close_docs(database_packet &database_arg);
+	void save(database_packet &database);			//return error
 	void remove_doc_from_dataBase(int selection, database_packet &database);			//return error
 
 	DataBase_Parser(IndexHandler &ih) : ih(&ih) {}	

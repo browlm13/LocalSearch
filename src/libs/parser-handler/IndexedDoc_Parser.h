@@ -32,7 +32,7 @@ class IndexedDoc_Parser : public XMLShark {
 public:
 
 		//private caller
-	void parse(string path, database_packet &database);									//needs to be passed
+	void parse(int selection, database_packet &database);									//needs to be passed
 
 	IndexedDoc_Parser(IndexHandler &ih) 	: ih(&ih) {}	
 	~IndexedDoc_Parser(){}

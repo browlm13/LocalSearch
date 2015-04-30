@@ -21,24 +21,21 @@ public:
 	void parse_dataBase(database_packet &database);								//return error
 
 	//save doc
-	void add_doc_to_dataBase(std::string new_path, database_packet &database);	//return error
+	void save(database_packet &database);	//return error
 	//delete doc
 	void remove_doc_from_dataBase(int selection, database_packet &database);	//retuen error
 
-
-			/*
-				edit: add database_packet database refrence arg
-					to load doc.								*/
+	void close_docs(database_packet &database);
 
 	//load saved doc
-	void load_doc(std::string path_to_doc, database_packet &database);										//return error
+	void load_doc(int selection, database_packet &database);										//return error
 	//load external doc
-	void add_newDoc(std::string path_to_doc);									//return error
+	void add_newDoc(std::string path_to_doc, database_packet &database);									//return error
 
 	//load doc segment
 	page_packet fetch_page(word_packet wp);										//not complete
-	//load doc segment
-	info_packet fetch_info(word_packet wp);										//not complete
+	//load doc segments
+	std::vector<info_packet> fetch_info(std::vector<word_packet> wps);			//not complete
 };
 
 

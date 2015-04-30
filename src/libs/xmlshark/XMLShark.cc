@@ -51,6 +51,14 @@ void XMLShark::open_file(string path){
 	}
 }
 
+void XMLShark::open_empty_file(string path){
+	file.open(path.c_str(), std::ofstream::out | std::ofstream::trunc);
+	if(file.fail()){
+		cout << "error opening" << path << endl;
+		exit(1);
+	}
+}
+
 void XMLShark::close_file()
 {file.close();}
 
