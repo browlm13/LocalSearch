@@ -60,9 +60,34 @@ void UserInterface::homeScreen(){
 				//if document is already open
 				if(database.doc_is_open(selection - 1)){
 					searchScreen();
-				}else{
-					qe->load_doc(selection - 1);		//error return
-					searchScreen();
+				}
+				else{
+
+					/*
+						edit:	can this be an unsaved 
+								warning function?
+														*/
+
+					//if there is an open and unsaved doc give warning
+					if(database.doc_is_open() && database.doc_is_unsaved()){
+
+						//warning message
+						cout << "\n\t\tUnsaved document will be closed\n\t\tWould you like to save it?\n";
+						ui = prompt("[y/N]: ");
+
+						//ui = FormatText::lower_case(ui);
+						if(ui.compare("y") == 0)
+							qe->save_newDoc();
+						else{
+							cout << "\nDocument not saved.\n";
+							qe->load_doc(selection - 1);		//error return
+							searchScreen();
+						}
+
+					}else{
+						qe->load_doc(selection - 1);		//error return
+						searchScreen();
+					}
 				}
 		}
 	}
@@ -299,8 +324,9 @@ bool UserInterface::run_cmd(string cmd){
 		if(cmd.compare(newDoc.trigger) == 0)
 			newDocScreen();
 		//save
-		if(cmd.compare(newDoc.trigger) == 0){
+		if(cmd.compare(save.trigger) == 0){
 			qe->save_newDoc();
+
 			//tmp
 			homeScreen();
 		}

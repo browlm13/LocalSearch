@@ -282,6 +282,16 @@ struct database_packet {
 		indexed_docs = new_index_list;
 	}
 
+	//remove unsaved document
+	void remove_unsaved_doc(){
+
+		//locate unsaved document and remove
+		for(int i= 0; i < indexed_docs.size(); i++){
+			if (indexed_docs[i].savedFlag == false)
+				remove_doc(i);
+		}
+	}
+
 	//clear
 	void clear(){
 		indexed_docs.clear();

@@ -80,6 +80,7 @@ void DataBase_Parser::save(database_packet &database){			//return error
 		doc_packet unsaved_doc;
 
 		unsaved_doc = database_ptr->get_unsaved();
+		database_ptr->remove_unsaved_doc();
 
 		//if no duplicate names
 		if(database_ptr->add_doc(unsaved_doc.title)){
@@ -96,11 +97,13 @@ void DataBase_Parser::save(database_packet &database){			//return error
 	 		dst.close();
 
 	 		ih->saveIndex(new_doc.indexDoc_path);
-		}else{
+		}
+		else{
 			cout << "duplicate file name" << endl;
 		}
 
-	} else{
+	} 
+	else{
 		cout << "no unsaved documents." << endl;
 	}
 	//if(database_ptr->add_doc())
