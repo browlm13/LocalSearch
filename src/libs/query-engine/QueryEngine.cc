@@ -144,6 +144,9 @@ bool QueryEngine::search(std::string raw_query){
 	//get info packets 								//could this retrieve the line with word?
 	//results = ph->fetch_info(raw_rseults);
 
+	if(ip_results.size() > 0)
+		results_found = true;
+	
 	return results_found;
 }
 

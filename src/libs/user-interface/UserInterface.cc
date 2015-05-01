@@ -18,11 +18,6 @@ using namespace std;
 					edit:	need diffrent types of messages
 																*/
 
-				/*
-					edit:	need banner that dispalays header
-						and cmds below, with hide option.
-																*/
-
 //--------------------------
 //		screens
 //			--------------------------
@@ -38,6 +33,7 @@ void UserInterface::homeScreen(){
 	homeScreen_cmds.push_back(newDoc);
 	homeScreen_cmds.push_back(config);
 	homeScreen_cmds.push_back(quit);
+	homeScreen_cmds.push_back(display);
 
 	set_cmds(homeScreen_cmds);
 
@@ -47,13 +43,7 @@ void UserInterface::homeScreen(){
 			and/or unsaved files.		*/
 
 
-	//header
-	system("clear");
-
-	//display comds
-	cout << cmds_toString();
-
-	cout << border('=', screen_width, " local SEARCH ", 2) << endl << endl;
+	header(" local SEARCH ", "make a message function.", "make an art function");
 
 	cout << dataBase_toString() << endl;
 
@@ -119,16 +109,12 @@ void UserInterface::newDocScreen(){
 	newDocScreen_cmds.push_back(home);
 	newDocScreen_cmds.push_back(config);
 	newDocScreen_cmds.push_back(quit);
+	newDocScreen_cmds.push_back(display);
 
 	set_cmds(newDocScreen_cmds);
 
 	//start
-	system("clear");
-
-	//display comds
-	cout << cmds_toString();
-
-	cout << border('*', screen_width, " open a new document? ", 2) << endl << endl;
+	header(" NEW doc ", "open a new document?", "make an art function");
 
 	string ui = prompt("\n[path]: ");
 
@@ -177,6 +163,7 @@ void UserInterface::searchScreen(){
 	searchScreen_cmds.push_back(home);
 	searchScreen_cmds.push_back(config);
 	searchScreen_cmds.push_back(quit);
+	searchScreen_cmds.push_back(display);
 
 	set_cmds(searchScreen_cmds);
 
@@ -186,14 +173,7 @@ void UserInterface::searchScreen(){
 			and/or unsaved files.		*/
 
 
-	//header
-	system("clear");
-
-	//display comds
-	cout << cmds_toString();
-
-	cout << border('?', screen_width, " search ", 2) << endl << endl;
-
+	header(" SEARCH ", "no message option.", display_glasses());
 
 		/*
 			edit:	should have a ui function that displays
@@ -214,7 +194,7 @@ void UserInterface::searchScreen(){
 		//search
 		//if results found
 		if(qe->search(ui))
-			cout << "call infoScreen";//infoScreen();
+			infoScreen();
 		else
 			searchScreen();
 	}
@@ -245,17 +225,13 @@ void UserInterface::configScreen(){
 	newDocScreen_cmds.push_back(config);
 	newDocScreen_cmds.push_back(newDoc);
 	newDocScreen_cmds.push_back(quit);
+	newDocScreen_cmds.push_back(display);
 
 	set_cmds(newDocScreen_cmds);
 
-	//start
-	system("clear");
-
-	cout << border('%', screen_width, " configuration ", 2) << endl << endl;
+	header(" Configure ", "remove a document from database?", "make an art function");
 
 	cout << dataBase_toString() << endl;
-
-	cout << cmds_toString();
 
 
 	//start
@@ -303,6 +279,7 @@ void UserInterface::infoScreen(){
 	infoScreen_cmds.push_back(newDoc);
 	infoScreen_cmds.push_back(back);
 	infoScreen_cmds.push_back(quit);
+	infoScreen_cmds.push_back(display);
 
 	set_cmds(infoScreen_cmds);
 
@@ -312,7 +289,7 @@ void UserInterface::infoScreen(){
 	cout << border('V', screen_width, " search results ", 2) << endl << endl;
 
 	cout << results_toString();
-/*
+
 	string ui = prompt("\n[#]: ");
 
 	//check if ui is a number
@@ -323,7 +300,6 @@ void UserInterface::infoScreen(){
 	else{
 		run_cmd(ui);
 	}
-*/
 }
 void UserInterface::pageScreen(){}
 
@@ -376,6 +352,15 @@ bool UserInterface::run_cmd(string cmd){
 			//tmp
 			homeScreen();
 		}
+		//display
+		if(cmd.compare(back.trigger) == 0){
+			if(hidden)
+				hidden = false;
+			else
+				hidden = true;
+
+			//return previous screen
+		}
 		//back
 		if(cmd.compare(back.trigger) == 0){
 			//will return to previous 
@@ -407,6 +392,8 @@ string UserInterface::cmds_toString(){
 		command_box += "\t";
 	}
 
+	//command_box += border('_', screen_width, 2);
+
 	return  command_box;
 }
 
@@ -419,34 +406,36 @@ string UserInterface::results_toString(){
 
 										*/
 	string s;
-	vector<word_packet> word_packet_results = qe->get_wp_results();
+	//vector<word_packet> word_packet_results = qe->get_wp_results();
 	vector<info_packet> paginated_results = qe->get_ip_results();
-/*
-	if(word_packet_results.size() > 0){
+
+	if(paginated_results.size() > 0){
 		int page_max = 5;
 
+/*
 		s += "\nSearch terms: ";
 
 		for(int i=0; i< word_packet_results.size();i++){
 			s += " ";
 			s += word_packet_results[i].word;
 		}
-
+*/
 		s += "\n\n";
 
 		for(int i=0; i< page_max; i++){
-			s += border('-', screen_width/2, FormatText::to_string(i + 1));
-			s += "\n[";
-			s += FormatText::to_string(i + 1);
-			s += "]";
-			s += /paginated_results[i].toString();
-			s += border('-', screen_width/2, FormatText::to_string(i + 1));
-			s += "\n";
+			if(i < paginated_results.size()){
+				s += border('-', screen_width/2, FormatText::to_string(i + 1));
+				s += "\n[";
+				s += FormatText::to_string(i + 1);
+				s += "]";
+				s += paginated_results[i].toString();
+				s += border('-', screen_width/2, FormatText::to_string(i + 1));
+				s += "\n";
+			}
 		}
 	}
 	else
 		s += "\nNO RESULTS FOUND.\n";
-*/
 
 	return s;
 }
@@ -513,6 +502,19 @@ string UserInterface::display_cur_doc(){
 //--------------------------
 //		eye candy	
 //			--------------------------
+
+void UserInterface::header(string title, string message, string art){
+	system("clear");
+
+	cout << border('_', screen_width);
+	cout << border(' ', screen_width, title, 0);
+	if(!hidden)
+		cout << cmds_toString();
+
+	//will be fucntions
+	cout << endl << message << endl;
+	cout << endl << art << endl;
+}
 
 string UserInterface::prompt(string prompt){
 	string input;
@@ -642,6 +644,33 @@ string UserInterface::border(char c, int length, string title, int indent){
 		s += "\n";
 
 	return s;
+}
+
+string UserInterface::display_glasses(){
+	string s;
+
+	//glasses
+	s += border(' ', (screen_width/2 - 15));
+	s += "          _,--,            _ ";
+	s += "\n";
+
+	s += border(' ', (screen_width/2 - 15));
+	s += "    ___,-'    |____      /' | ";
+	s += "\n";
+
+	s += border(' ', (screen_width/2 - 15));
+	s += "   /     \\,--,/     \\  /'   | ";
+	s += "\n";
+
+	s += border(' ', (screen_width/2 - 15));
+	s += "  |       )  (       |' ";
+	s += "\n";
+
+	s += border(' ', (screen_width/2 - 15));
+	s += "   \\_____/    \\_____/";
+	s += "\n";
+
+    return s;
 }
 
 //--------------------------

@@ -13,8 +13,9 @@ class UserInterface {
 	int screen_width;
 
 	//navigation
-	//current_screen
-	//previous_screen
+	//next_screen
+	//cur_screen
+	//back_screen
 
 	//cmd handling
 	struct cmd{
@@ -26,7 +27,7 @@ class UserInterface {
 			trigger = trigger_arg;
 		}
 
-	} quit, home, config, newDoc, back, save;
+	} quit, home, config, newDoc, back, save, display;
 	std::vector<cmd> cur_cmds;
 
 public:
@@ -41,6 +42,7 @@ public:
 		newDoc.set("(n)ewDoc", "n");
 		back.set("(b)ack", "b");
 		save.set("(s)ave", "s");
+		display.set("(d)isplay", "d");
 
 	}
 
@@ -60,6 +62,11 @@ public:
 	std::string dataBase_toString();		//calls query engine function
 	std::string cmds_toString();
 	std::string display_cur_doc();
+	//art
+	std::string display_glasses();
+	
+	//flags
+	bool hidden;
 
 	//cmd handling
 	void set_cmds(std::vector<cmd> cmds);
@@ -69,7 +76,8 @@ public:
 	bool is_int(std::string in_question);
 
 
-	//TMP (display functions to be contained in FormatText namespace)
+	//TMP (some display functions to be contained in FormatText namespace)
+	void header(string title, string message, string art);
 	std::string prompt(string prompt);
 
 	std::string options_box(vector<string> options, std::string title);
