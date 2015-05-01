@@ -38,6 +38,36 @@ struct doc_id_packet{
 	doc_id_packet()	: 	
 		file_path(""), byte_location(0) {}
 
+	//operator comparison overloads
+	/*
+	inline bool operator==(const doc_id_packet& lhs, const doc_id_packet& rhs){ 
+		bool equal = true;
+
+		if(lhs.file_path.compare(rhs.file_path) != 0)
+			equal = false;
+		if(lhs.byte_location != rhs.byte_location)
+			equal = false;
+
+		return equal;
+	}
+	inline bool operator!=(const doc_id_packet& lhs, const doc_id_packet& rhs){
+		return !(lhs == rhs);
+	}
+	*/
+	inline bool operator==(const doc_id_packet& rhs){ 
+		bool equal = true;
+
+		if(this->file_path.compare(rhs.file_path) != 0)
+			equal = false;
+		if(this->byte_location != rhs.byte_location)
+			equal = false;
+
+		return equal;
+	}
+	
+	inline bool operator!=(const doc_id_packet& rhs){
+		return !(*this == rhs);
+	}
 	//members
 	std::string file_path;
 	long byte_location;

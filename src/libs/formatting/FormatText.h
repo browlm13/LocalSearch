@@ -25,8 +25,12 @@ class FormatText {
 public:
 	//text formatting
 	static string format_word( const string raw_word );
+	static vector<string> format_query( const string raw_query );
+	
 	static string lower_case( const string raw_word );
+	static string conv_case( const string &word, int arg );
 	static vector<string> break_apart( const string raw_line );
+	static void conv_operands(string &raw_word);
 	static bool stop_word( const string unkown );
 
 	/*

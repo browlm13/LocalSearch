@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "FormatText.h"
 
 //---------------------------------------------------------------------------------------------------//
@@ -34,30 +36,64 @@ string FormatText::format_word( const string raw_word ){
 }
 
 //--------------------------
+//		format query: break apart, case, stop words, stemming
+//			--------------------------
+vector<string> FormatText::format_query( const string raw_query ){
+	vector<string> formatted_query;
+
+	//break apart
+	formatted_query = break_apart(raw_query);
+
+	//convert case, convert operands
+	for(int i = 0; i < formatted_query.size(); i++){
+		transform(formatted_query[i].begin(), formatted_query[i].end(), formatted_query[i].begin(), ::tolower);
+		conv_operands(formatted_query[i]);
+	}
+
+	//remove stop words
+	//stemming
+
+	return formatted_query;
+}
+
+//--------------------------
+//		convert operands	
+//			--------------------------
+void FormatText::conv_operands(string &unkown){
+	if(unkown.compare("and") == 0)
+		unkown = "&&";
+
+	if(unkown.compare("or") == 0)
+		unkown = "||";
+	
+	if(unkown.compare("not") == 0)
+		unkown = "!!";
+}
+
+//--------------------------
 //		convert case	
 //			--------------------------
 
-/*
-*converts the case of the string argument
-*mod(0 for lower case, 1 for uper case)
-*/
 string FormatText::lower_case( const string raw_word ) {
+	string lowerCase_word = raw_word;
 
-	//declare tmp char[] and lowerCasestring to return
-	string lowerCase_word;
-	char *tmp = new char[raw_word.length()];
+	transform(lowerCase_word.begin(), lowerCase_word.end(), lowerCase_word.begin(), ::tolower);
 
-	//for each character in string if upper case, add ascii value offset
-	for(int i = 0; i< raw_word.length(); i++) {
-		tmp[i] = raw_word.at(i);
-		if( ((int)tmp[i] >= 65) && ((int)tmp[i] <= 90) )
-			tmp[i] += 32;
-	}
-
-	//transfer and return
-	lowerCase_word = tmp;
 	return lowerCase_word;
 }
+
+//conv_case: 1 for upper, 0 for lower
+string FormatText::conv_case( const string &raw_word, int type ){
+	string formatted_word = raw_word;
+
+	if(type == 1)
+		transform(formatted_word.begin(), formatted_word.end(), formatted_word.begin(), ::toupper);
+	else
+		formatted_word = lower_case(formatted_word);
+
+	return formatted_word;
+}
+
 bool stop_word( const string unkown ){}
 
 //--------------------------

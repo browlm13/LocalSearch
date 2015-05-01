@@ -18,6 +18,11 @@ using namespace std;
 					edit:	need diffrent types of messages
 																*/
 
+				/*
+					edit:	need banner that dispalays header
+						and cmds below, with hide option.
+																*/
+
 //--------------------------
 //		screens
 //			--------------------------
@@ -45,11 +50,12 @@ void UserInterface::homeScreen(){
 	//header
 	system("clear");
 
+	//display comds
+	cout << cmds_toString();
+
 	cout << border('=', screen_width, " local SEARCH ", 2) << endl << endl;
 
 	cout << dataBase_toString() << endl;
-
-	cout << cmds_toString();
 
 
 	//start
@@ -119,9 +125,10 @@ void UserInterface::newDocScreen(){
 	//start
 	system("clear");
 
-	cout << border('*', screen_width, " open a new document? ", 2) << endl << endl;
-
+	//display comds
 	cout << cmds_toString();
+
+	cout << border('*', screen_width, " open a new document? ", 2) << endl << endl;
 
 	string ui = prompt("\n[path]: ");
 
@@ -182,6 +189,9 @@ void UserInterface::searchScreen(){
 	//header
 	system("clear");
 
+	//display comds
+	cout << cmds_toString();
+
 	cout << border('?', screen_width, " search ", 2) << endl << endl;
 
 
@@ -196,9 +206,6 @@ void UserInterface::searchScreen(){
 	//should display document information
 	cout << display_cur_doc() << endl;
 
-	//display comds
-	cout << cmds_toString();
-
 	//start
 	string ui = prompt("\n[query]: ");
 
@@ -207,7 +214,9 @@ void UserInterface::searchScreen(){
 		//search
 		//if results found
 		if(qe->search(ui))
-			infoScreen();
+			cout << "call infoScreen";//infoScreen();
+		else
+			searchScreen();
 	}
 
 	//string query = prompt("[?query?]: ");
@@ -412,26 +421,32 @@ string UserInterface::results_toString(){
 	string s;
 	vector<word_packet> word_packet_results = qe->get_wp_results();
 	vector<info_packet> paginated_results = qe->get_ip_results();
-	int page_max = 5;
+/*
+	if(word_packet_results.size() > 0){
+		int page_max = 5;
 
-	s += "\nSearch terms: ";
+		s += "\nSearch terms: ";
 
-	for(int i=0; i< word_packet_results.size();i++){
-		s += " ";
-		s += word_packet_results[i].word;
+		for(int i=0; i< word_packet_results.size();i++){
+			s += " ";
+			s += word_packet_results[i].word;
+		}
+
+		s += "\n\n";
+
+		for(int i=0; i< page_max; i++){
+			s += border('-', screen_width/2, FormatText::to_string(i + 1));
+			s += "\n[";
+			s += FormatText::to_string(i + 1);
+			s += "]";
+			s += /paginated_results[i].toString();
+			s += border('-', screen_width/2, FormatText::to_string(i + 1));
+			s += "\n";
+		}
 	}
-
-	s += "\n\n";
-
-	for(int i=0; i< page_max; i++){
-		s += border('-', screen_width/2, FormatText::to_string(i + 1));
-		s += "\n[";
-		s += FormatText::to_string(i + 1);
-		s += "]";
-		s += paginated_results[i].toString();
-		s += border('-', screen_width/2, FormatText::to_string(i + 1));
-		s += "\n";
-	}
+	else
+		s += "\nNO RESULTS FOUND.\n";
+*/
 
 	return s;
 }

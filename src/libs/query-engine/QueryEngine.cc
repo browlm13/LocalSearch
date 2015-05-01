@@ -43,29 +43,105 @@ void QueryEngine::remove_doc(int selection){
 }
 
 //--------------------------
+//		query processsing
+//			--------------------------
+void QueryEngine::perform_operation(string unkown, vector<word_packet> &running_results, string &cur_operation){
+	//change operation if necssicary
+	if(unkown.compare("||") == 0)
+		cur_operation = "||";
+
+	else if(unkown.compare("&&") == 0)
+		cur_operation = "&&";
+
+	else if(unkown.compare("!!") == 0)
+		cur_operation = "!!";
+
+	else{
+
+		//retrieve search results
+		vector<word_packet> new_results;
+		vector<word_packet> wps;
+		wps = ih->search(unkown);
+
+		if(wps.size() > 0){
+
+			//or
+			if(cur_operation.compare("||") == 0){
+				//add all
+				for(int i= 0; i<running_results.size(); i++)
+					new_results.push_back(running_results[i]);
+				for(int i= 0; i<wps.size(); i++)
+					new_results.push_back(wps[i]);
+			}
+
+			//and
+			if(cur_operation.compare("&&") == 0){
+				for(int i=0; i < running_results.size(); i++){
+					for(int j=0; j < wps.size(); j++){
+
+						//if doc ids match
+						if(running_results[i].id==wps[j].id){
+							cout << running_results[i].id.byte_location << " == " << wps[i].id.byte_location << endl;
+							new_results.push_back(wps[j]);
+						}
+					}
+				}
+			}
+
+			//not
+			if(cur_operation.compare("!!") == 0){
+				for(int i=0; i < running_results.size(); i++){
+					bool match = false;
+					for(int j=0; j < wps.size(); j++){
+
+						//if doc ids match
+						if(running_results[i].id == wps[j].id){
+							cout << running_results[i].id.byte_location << " == " << wps[i].id.byte_location << endl;
+							match = true;
+						}
+					}
+					if(!match)
+						new_results.push_back(running_results[i]);
+				}
+			}
+
+		}
+
+		running_results = new_results;
+	}
+
+}
+//--------------------------
 //		searching
 //			--------------------------
 
-//vector<info_packet> QueryEngine::search(std::string raw_query){
 bool QueryEngine::search(std::string raw_query){
 	bool results_found = false;
-	string formatted_query;
+	vector<string> formatted_query;
 
-	wp_results = ih->search(raw_query);
-	ip_results = ph->fetch_info(wp_results, database);
-
-	if(ip_results.size() > 0)
-		results_found = true;
-
-	/////////////////////////////////////////////////////
+	//clear last search results
+	wp_results.clear();
+	ip_results.clear();
 
 	//format query
-	//formatted_query = FormatTest::format_query(raw_query);
+	formatted_query = FormatText::format_query(raw_query);
 
-	//get raw doc results
-	//raw_results = ih->search(formatted_query);
+	string cur_operation = "||";
+	vector<word_packet> running_results;
 
-	//get info packets
+	for(int i=0; i < formatted_query.size(); i++)
+		perform_operation( formatted_query[i], running_results, cur_operation);
+
+	wp_results = running_results;
+	ip_results = ph->fetch_info(running_results, database);
+
+
+//TMP***
+		for(int i =0; i< ip_results.size(); i++)
+			cout << ip_results[i].toString();
+//TMP***
+
+	//get info packets 								//could this retrieve the line with word?
 	//results = ph->fetch_info(raw_rseults);
 
 	return results_found;

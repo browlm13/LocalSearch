@@ -38,6 +38,9 @@ public:
 	//refreshes or loads database object member
 	void load_dataBase();
 
+	//query proccessing
+	void perform_operation(std::string unkown, vector<word_packet> &running_results, std::string &cur_operation);
+
 	//ui functions
 	bool search(std::string raw_query);
 
@@ -46,7 +49,7 @@ public:
 	vector<word_packet> get_wp_results();
 	vector<info_packet> get_ip_results();
 
-	
+
 	//maitince mode:
 		//choose index type		//set in index
 
