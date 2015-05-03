@@ -60,14 +60,7 @@ void IndexedDoc_Parser::parse(int selection, database_packet &database){
 	ih->set_dataStruct(database_ptr->get_dataStruct_type());
 
 	database_ptr->close();
-
 	database_ptr->set_openFlag(database_ptr->get_doc(selection).title, true);
-
-	//TMP***
-	cout << "\nselection = " << database_ptr->get_doc(selection).title << endl;
-
-	//TMP***
-	cout << "\nselection = " << selection << endl;
 
   	_parse(database_ptr->get_doc(selection).indexDoc_path, 0);
 }

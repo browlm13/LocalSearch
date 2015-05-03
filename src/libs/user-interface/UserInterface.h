@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "query-engine/QueryEngine.h"
 
@@ -11,11 +12,6 @@ class UserInterface {
 
 	//dimensions
 	int screen_width;
-
-	//navigation
-	//next_screen
-	//cur_screen
-	//back_screen
 
 	//cmd handling
 	struct cmd{
@@ -27,7 +23,7 @@ class UserInterface {
 			trigger = trigger_arg;
 		}
 
-	} quit, home, config, newDoc, back, save, display;
+	} quit, home, config, newDoc, back, save, display, next, previous;
 	std::vector<cmd> cur_cmds;
 
 public:
@@ -36,6 +32,13 @@ public:
 		//get screen dimensions
 		screen_width = 120;
 
+		//page info
+		page_max = 3;
+		cur_page = 0;
+
+		//init
+		hidden = false;
+
 		quit.set("(q)uit", "q");
 		home.set("(h)ome", "h");
 		config.set("(c)onfig", "c");
@@ -43,6 +46,8 @@ public:
 		back.set("(b)ack", "b");
 		save.set("(s)ave", "s");
 		display.set("(d)isplay", "d");
+		next.set("(j) next page", "j");
+		previous.set("(k) previous page", "k");
 
 	}
 
@@ -61,10 +66,19 @@ public:
 	std::string results_toString();
 	std::string dataBase_toString();		//calls query engine function
 	std::string cmds_toString();
-	std::string display_cur_doc();
+	std::string display_cur_doc(int orientation);
+	std::string message_toString(std::string message);
 	//art
-	std::string display_glasses();
-	
+	std::string display_glasses(int orientation);
+
+	//navigation
+	//next_screen
+	//cur_screen
+	//back_screen
+	int cur_page;
+	int page_max;
+	bool last_page;
+
 	//flags
 	bool hidden;
 
@@ -74,6 +88,7 @@ public:
 
 	//user input helpers
 	bool is_int(std::string in_question);
+	std::ifstream::pos_type filesize(const char* filename);
 
 
 	//TMP (some display functions to be contained in FormatText namespace)

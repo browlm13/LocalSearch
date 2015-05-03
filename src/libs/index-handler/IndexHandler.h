@@ -67,7 +67,7 @@ private:
 
 public:
 	//possibly index file locaiton as arg
-	IndexHandler() {result_amount = 30;}
+	IndexHandler() {result_amount = 999999;}				//make this automatically return entire tree
 	~IndexHandler() {}
 
 	void 			set_dataStruct( int type );	

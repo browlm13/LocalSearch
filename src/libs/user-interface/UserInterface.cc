@@ -43,7 +43,7 @@ void UserInterface::homeScreen(){
 			and/or unsaved files.		*/
 
 
-	header(" local SEARCH ", "make a message function.", "make an art function");
+	header(" local SEARCH ", "make a message function. it should be dope. indent, batman trex aligator large planet earth solar wing tree man bike kat", "make an art function");
 
 	cout << dataBase_toString() << endl;
 
@@ -173,7 +173,7 @@ void UserInterface::searchScreen(){
 			and/or unsaved files.		*/
 
 
-	header(" SEARCH ", "no message option.", display_glasses());
+	header(" SEARCH ", "no message option.", display_glasses(1));
 
 		/*
 			edit:	should have a ui function that displays
@@ -183,8 +183,9 @@ void UserInterface::searchScreen(){
 	if(qe->get_unsavedFlag()){
 		cout << "\n\t\t\tUNSAVED DOCUMENT\n";
 	}
+
 	//should display document information
-	cout << display_cur_doc() << endl;
+	cout << display_cur_doc(2) << endl;
 
 	//start
 	string ui = prompt("\n[query]: ");
@@ -273,33 +274,83 @@ void UserInterface::quitScreen(){
 }
 
 void UserInterface::infoScreen(){
+	vector<info_packet> paginated_results = qe->get_ip_results();
+
 	//Info Screen CMDS
 	vector<cmd> infoScreen_cmds;
 	infoScreen_cmds.push_back(home);
 	infoScreen_cmds.push_back(newDoc);
+	infoScreen_cmds.push_back(display);
+	infoScreen_cmds.push_back(next);
+	infoScreen_cmds.push_back(previous);
 	infoScreen_cmds.push_back(back);
 	infoScreen_cmds.push_back(quit);
-	infoScreen_cmds.push_back(display);
 
 	set_cmds(infoScreen_cmds);
 
 	//start
 	system("clear");
 
-	cout << border('V', screen_width, " search results ", 2) << endl << endl;
+	header(" Search Results ", " Enter # to view full page. ", "make an art function");
 
-	cout << results_toString();
+	//cout << results_toString();
+	string s;
+
+	if(paginated_results.size() > 0){
+
+		s += "\n";
+		if(last_page)
+			s += "LAST PAGE ";
+		else
+			s += "PAGE ";
+		s += FormatText::to_string(cur_page + 1);
+		s += "\nSearch Results: ";
+		s += FormatText::to_string(paginated_results.size());
+
+		for(int i=0; i< page_max; i++){
+			if(i + (cur_page * page_max) <= paginated_results.size()){
+				last_page = false;
+
+				//display
+				s += border(' ', 15, 0);
+				s += border('-', (screen_width - screen_width/6) , FormatText::to_string((page_max*cur_page) +i  + 1));
+
+				s += "\n[";
+				s += FormatText::to_string(i + 1);
+				s += "]";
+				s += paginated_results[i + (cur_page * page_max)].toString();
+
+				s += border(' ', 15);
+				s += border('-', (screen_width - screen_width/6), FormatText::to_string((page_max*cur_page) +i  + 1));
+				s += "\n";
+			}
+			else
+				last_page = true;
+		}
+	}
+	else
+		s += "\nNO RESULTS FOUND.\n";
+
+	cout << s;
 
 	string ui = prompt("\n[#]: ");
 
 	//check if ui is a number
 	if(is_int(ui)){
 		int selection = atoi( ui.c_str() );
-		cout << "\nOPEN.";
+
+		if(selection <= page_max){
+			cout << "\nOPEN.";
+			//[(cur_page * page max) + i - 1] == selection index
+			//send to full page with those aruments
+		}
+		else
+			cout << "out of range.";
 	}
 	else{
 		run_cmd(ui);
 	}
+
 }
 void UserInterface::pageScreen(){}
 
@@ -361,14 +412,24 @@ bool UserInterface::run_cmd(string cmd){
 
 			//return previous screen
 		}
-		//back
-		if(cmd.compare(back.trigger) == 0){
-			//will return to previous 
-			//screen
-			//tmp
-			cout << "\nback";
-			
+		//next
+		if(cmd.compare(next.trigger) == 0){
+			if(!last_page)
+				cur_page++;
+				infoScreen();
 		}
+		//previous
+		if(cmd.compare(previous.trigger) == 0){
+			if(cur_page <= 0){
+				searchScreen();
+			}
+			cur_page--;
+			infoScreen();
+		}
+		//back
+		if(cmd.compare(back.trigger) == 0)
+			searchScreen();
+
 		is_cmd = true;
 	}
 
@@ -412,23 +473,33 @@ string UserInterface::results_toString(){
 	if(paginated_results.size() > 0){
 		int page_max = 5;
 
-/*
-		s += "\nSearch terms: ";
-
-		for(int i=0; i< word_packet_results.size();i++){
-			s += " ";
-			s += word_packet_results[i].word;
-		}
-*/
 		s += "\n\n";
 
 		for(int i=0; i< page_max; i++){
 			if(i < paginated_results.size()){
-				s += border('-', screen_width/2, FormatText::to_string(i + 1));
+				/*
+				//calculate info
+				for(int i=0; i< word_packet_results.size();i++){
+					if(paginated_results[i].id == word_packet_results[i].id){
+						s += word_packet_results[i].word;
+						s += ", gtf:";
+						s += word_packet_results[i].globaltf;
+						s += ", tf:";
+						s += word_packet_results[i].tf;
+						s += "\n";
+					}
+				}
+				*/
+				//display
+				s += border(' ', 10);
+				s += border('-', (screen_width - screen_width/4) , FormatText::to_string(i + 1));
+
 				s += "\n[";
 				s += FormatText::to_string(i + 1);
 				s += "]";
 				s += paginated_results[i].toString();
+
+				s += border(' ', 10);
 				s += border('-', screen_width/2, FormatText::to_string(i + 1));
 				s += "\n";
 			}
@@ -475,15 +546,45 @@ string UserInterface::dataBase_toString(){
 }
 
 //display current doc
-string UserInterface::display_cur_doc(){
+string UserInterface::display_cur_doc(int orientation){
+
+	//should be right oriented
+	int indent = 5;
+	int max = 15;
+
 	string s;
 	database_packet dataBase = qe->get_dataBase();
 
 	//doc information
 	if(dataBase.doc_is_open()){
 		doc_packet dp = dataBase.get_open();
+
+			//calculate indent
+			//max
+			if(dp.fullDoc_path.size() > max)
+				max = dp.fullDoc_path.size();
+
+			//center
+			if(orientation == 1)
+				indent = screen_width/2 - max/2;
+			//right
+			if(orientation == 2)
+				indent = screen_width - max - indent;
+
+		s += border(' ', indent);
+		s += border('-', max);
+		s += "\n";
+		s += border(' ', indent);
 		s += "DOCUMENT TITLE: ";
 		s += dp.title;
+		s += "\n";
+		s += border(' ', indent);
+		s += "file size: ";
+		s += FormatText::to_string( filesize(dp.fullDoc_path.c_str()) );
+		s += " bytes";
+		s += border(' ', indent, 0);
+		s += border('-', max);
+
 	}
 	else{
 		s += "NO OPEN DOCUMENTS";
@@ -506,14 +607,58 @@ string UserInterface::display_cur_doc(){
 void UserInterface::header(string title, string message, string art){
 	system("clear");
 
-	cout << border('_', screen_width);
+	cout << border('_', screen_width, 2);
 	cout << border(' ', screen_width, title, 0);
 	if(!hidden)
 		cout << cmds_toString();
 
-	//will be fucntions
-	cout << endl << message << endl;
-	cout << endl << art << endl;
+		//will be fucntion
+	//cout << endl << art << endl;
+
+	cout << message_toString(message) << endl;
+}
+
+string UserInterface::message_toString(string message){
+	string s;
+	int message_width = 25;
+	int offset = 5;
+	
+	vector<string> broken = FormatText::break_apart(message);
+
+	s += "\n\n";
+
+	int i = 0;
+	while( i < broken.size() ){
+
+		int indent = screen_width/2 - message_width/2 - offset;
+		int total = 0;
+
+		//tab
+		if(i == 0){
+			indent = screen_width/2 - message_width/2;
+			total = 5;
+		}
+
+		//new line
+		s += "\n";
+		s += border(' ', indent);
+
+		while(total < message_width){
+
+			s += broken[i];
+			s += " ";
+
+			total += broken[i].size();
+			i++;
+
+			if(!(i < broken.size()))
+				total = message_width;
+		}
+	}
+
+	s += "\n";
+
+	return s;
 }
 
 string UserInterface::prompt(string prompt){
@@ -646,29 +791,51 @@ string UserInterface::border(char c, int length, string title, int indent){
 	return s;
 }
 
-string UserInterface::display_glasses(){
+string UserInterface::display_glasses(int orientation){
 	string s;
+	int max = 0;
+	int indent = 5;
 
-	//glasses
-	s += border(' ', (screen_width/2 - 15));
-	s += "          _,--,            _ ";
-	s += "\n";
+	vector<string> segments;
+	//string s0 =   "          _,--,            _ ";
+	//string s1 =   "    ___,-'    |____      /' | ";
+	//string s2 = "   /     \\,--,/     \\  /'   | "; 
+	//string s3 =  "  |       )  (       |' ";
+	//string s4 = "   \\_____/    \\_____/";
 
-	s += border(' ', (screen_width/2 - 15));
-	s += "    ___,-'    |____      /' | ";
-	s += "\n";
+	string s0 = " _________                            .__      ";
+	string s1 = "/   _____/ ____ _____ _______    ____ |  |__   ";
+	string s2 = "\\_____ \\_/ __ \\\\_\\ _  __\\_/ __\\|  |  \\ ";
+	string s3 = " /       \\  ___/ / __\\|  | \\/\\ \\__|   Y  \\";
+	string s4 = "/_______  /\\__  >____  /__|    \\___  >___|  / ";
+	string s5 = "       \\/    \\/    \\/           \\/    \\/  ";
 
-	s += border(' ', (screen_width/2 - 15));
-	s += "   /     \\,--,/     \\  /'   | ";
-	s += "\n";
+	segments.push_back(s0);
+	segments.push_back(s1);
+	segments.push_back(s2);
+	segments.push_back(s3);
+	segments.push_back(s4);
 
-	s += border(' ', (screen_width/2 - 15));
-	s += "  |       )  (       |' ";
-	s += "\n";
+	//get max string length;
+	for(int i=0; i < segments.size(); i++){
+		if (segments[i].size() > max)
+			max = segments[i].size();
+	}
 
-	s += border(' ', (screen_width/2 - 15));
-	s += "   \\_____/    \\_____/";
-	s += "\n";
+
+	//set indent
+	//middle
+	if(orientation == 1)
+		indent = screen_width/2 - max/2;
+	if(orientation == 2)
+		indent = screen_width - max - indent;
+
+	//to string
+	for(int i =0; i < segments.size(); i++){
+		s += "\n";
+		s += border(' ', indent);
+		s += segments[i];
+	}
 
     return s;
 }
@@ -687,4 +854,11 @@ bool UserInterface::is_int(std::string in_question){
 	}
 
 	return is_int;
+}
+
+//calculate file size
+std::ifstream::pos_type UserInterface::filesize(const char* filename)
+{
+    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+    return in.tellg(); 
 }

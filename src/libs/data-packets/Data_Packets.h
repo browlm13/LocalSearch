@@ -39,21 +39,6 @@ struct doc_id_packet{
 		file_path(""), byte_location(0) {}
 
 	//operator comparison overloads
-	/*
-	inline bool operator==(const doc_id_packet& lhs, const doc_id_packet& rhs){ 
-		bool equal = true;
-
-		if(lhs.file_path.compare(rhs.file_path) != 0)
-			equal = false;
-		if(lhs.byte_location != rhs.byte_location)
-			equal = false;
-
-		return equal;
-	}
-	inline bool operator!=(const doc_id_packet& lhs, const doc_id_packet& rhs){
-		return !(lhs == rhs);
-	}
-	*/
 	inline bool operator==(const doc_id_packet& rhs){ 
 		bool equal = true;
 
@@ -168,22 +153,78 @@ struct info_packet{
 	std::string title;
 	string contributors;
 	std::string text;
+	std::string cut_text;
 
 	void clear(){
-		title = "no title";
-		contributors = "no contributors";
-		text = "no text";
+		title = "";
+		contributors = "";
+		text = "";
 	}
 
 	std::string toString(){
 		string s;
-		s += "\n\t\t[";
-		s += title;
-		s += ", ";
-		s += contributors;
-		s += ".]\n\t ";
-		s += text;
-		s += "\n";
+
+		/*
+			edit: add bolded search words 
+			here. and screen with and other
+			vital info.
+												*/
+
+		//trim for paginated display
+		bool t = false;
+		bool c = false;
+		int max_lines = 5;
+		int cur_line = 0;
+		int cut = 320;
+		int new_line = 90;
+		int new_line_count = 0;
+		string indent = "\t\t";
+
+		if(title.size() > 0){
+			s += "\n\t\t\t\t\tTitle: ";
+			s += title;
+			cur_line++;
+		}
+
+		if(contributors.size() > 0){
+			s += "\n\t\t\t\t\tContributors: ";
+			s += contributors;
+			cur_line++;
+		}
+
+		for(int i=0; i < cut; i++){
+
+				if( (cur_line < max_lines) && (i < text.size()) ) {
+
+					//toruble formatting
+					//if( (text.at(i) > 62 && text.at(i) < 91) || (text.at(i) > 47 && text.at(i) < 60) || (text.at(i) > 96 && text.at(i) < 123) || (text.at(i) > 31 && text.at(i) < 35) ||(text.at(i) > 37 && text.at(i) < 42) ||(text.at(i) == 46)||(text.at(i) == 44))
+					cut_text += text.at(i);
+					new_line_count++;
+
+					if(text.at(i) == '\n'){
+						cut_text += indent;
+						new_line_count = 0;
+						cur_line++;
+					}
+
+					else if(new_line_count > new_line && text.at(i) == ' '){
+						cut_text += "\n";
+						cut_text += indent;
+						new_line_count = 0;
+						cur_line++;
+					}
+
+				}
+		}
+		//cut_text += "...";
+		
+		if(text.size() > 0){
+			s += "\n\n\t\t ";
+			s += cut_text;
+		}
+
+		s += "\n\n";
+
 		return s;
 	}
 };

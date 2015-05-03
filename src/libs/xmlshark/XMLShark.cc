@@ -1,7 +1,12 @@
-#include "XMLShark.h"
-//#include "FormatText.h"
 #include <cstdlib>
 #include <iostream>
+#include "XMLShark.h"
+
+#include "formatting/FormatText.h"
+
+//TMP***
+#include "formatting/StopWords_Hash.h"
+#include "porter2-stemmer/porter2_stemmer.h"
 
 using namespace std;
 
@@ -71,6 +76,14 @@ void XMLShark::_parse(string path, long location){
 		edit:	handle blank documents
 				and first line.
 										*/
+	/*
+		edit:	stop words hash
+				should be contained
+				in formattext namespace
+											*/
+
+		//TMP***
+	StopWords_Hash swh;
 
 	//save path
 	path_name = path;
@@ -115,9 +128,26 @@ void XMLShark::_parse(string path, long location){
 
 					//ELSE ( c is not a digit or a leter ) && ( str size is > 0)
 					else if ( str.size() > 0 ){
-						//format_push_clear(fm_strs, str);
-						fm_strs.push_back(str);
-						str.clear();
+						format_push_clear(fm_strs, str);
+
+						//TMP
+							//bool stop_word = false;
+
+							//lower case
+							//FormatText::lower_case(str);
+
+							//remove stop word
+							//stop_word = swh.is_stop_word(str);
+
+							//stem
+							//Porter2Stemmer::stem(str);
+
+							//add if not a stop word
+							//if(!stop_word){
+								//fm_strs.push_back(str);
+								//str.clear();
+							//}
+						//TMP
 					}
 
 					c = file.get();
@@ -196,11 +226,34 @@ void XMLShark::_parse(string path, long location){
 
 //inline function to format push and clear current string
 void XMLShark::format_push_clear(vector<string> &v, string &s){
+/*
+	/*
+		edit: should call
+		formattext
+						*/
 
-	//Porter2Stemmer::stem(s);
+	FormatText::lower_case(s);
+	Porter2Stemmer::stem(s);
 	v.push_back(s);
 	s.clear();
+/*
+	bool stop_word = false;
 
+	//lower case
+	FormatText::lower_case(s);
+
+	//remove stop word
+	stop_word = swh.is_stop_word(s);
+
+	//stem
+	Porter2Stemmer::stem(s);
+
+	//add if not a stop word
+	if(!stop_word){
+		v.push_back(s);
+		s.clear();
+	}
+*/
 					//	FORMAT STRING:
 					//(stem, remove stop word) (FormatTest::)
 					//	ADD STRING:

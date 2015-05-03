@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "FormatText.h"
+#include "porter2-stemmer/porter2_stemmer.h"
 
 //---------------------------------------------------------------------------------------------------//
 /*
@@ -48,10 +49,11 @@ vector<string> FormatText::format_query( const string raw_query ){
 	for(int i = 0; i < formatted_query.size(); i++){
 		transform(formatted_query[i].begin(), formatted_query[i].end(), formatted_query[i].begin(), ::tolower);
 		conv_operands(formatted_query[i]);
-	}
 
-	//remove stop words
-	//stemming
+		//remove stop words
+		//stem
+		Porter2Stemmer::stem(formatted_query[i]);
+	}
 
 	return formatted_query;
 }

@@ -23,6 +23,11 @@ using std::fstream;
 					to feed it a folder, 
 					not just single file.
 												*/
+	/*
+			edit:	stop words hash
+					should be contained
+					in formattext namespace
+												*/
 
 class XMLShark {
 protected:

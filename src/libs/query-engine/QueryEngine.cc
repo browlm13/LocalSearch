@@ -133,20 +133,17 @@ bool QueryEngine::search(std::string raw_query){
 		perform_operation( formatted_query[i], running_results, cur_operation);
 
 	wp_results = running_results;
+
+
+	//pass ip_results the search terms for abriviation
 	ip_results = ph->fetch_info(running_results, database);
-
-
-//TMP***
-		for(int i =0; i< ip_results.size(); i++)
-			cout << ip_results[i].toString();
-//TMP***
 
 	//get info packets 								//could this retrieve the line with word?
 	//results = ph->fetch_info(raw_rseults);
 
 	if(ip_results.size() > 0)
 		results_found = true;
-	
+
 	return results_found;
 }
 
