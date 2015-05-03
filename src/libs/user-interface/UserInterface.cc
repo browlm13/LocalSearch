@@ -167,6 +167,9 @@ void UserInterface::searchScreen(){
 
 	set_cmds(searchScreen_cmds);
 
+	//reset cur_page
+	cur_page = 0;
+
 	/*
 		edit:	screens may require a check
 			for open (searchable) files,
@@ -279,6 +282,7 @@ void UserInterface::infoScreen(){
 	//Info Screen CMDS
 	vector<cmd> infoScreen_cmds;
 	infoScreen_cmds.push_back(home);
+	infoScreen_cmds.push_back(config);
 	infoScreen_cmds.push_back(newDoc);
 	infoScreen_cmds.push_back(display);
 	infoScreen_cmds.push_back(next);
@@ -295,42 +299,51 @@ void UserInterface::infoScreen(){
 
 	//cout << results_toString();
 	string s;
+	string info;
 
 	if(paginated_results.size() > 0){
 
-		s += "\n";
-		if(last_page)
-			s += "LAST PAGE ";
-		else
-			s += "PAGE ";
-		s += FormatText::to_string(cur_page + 1);
-		s += "\nSearch Results: ";
-		s += FormatText::to_string(paginated_results.size());
-
+		//calculate info
 		for(int i=0; i< page_max; i++){
-			if(i + (cur_page * page_max) <= paginated_results.size()){
-				last_page = false;
+			if(i + (cur_page * page_max) < paginated_results.size()){
 
 				//display
-				s += border(' ', 15, 0);
-				s += border('-', (screen_width - screen_width/6) , FormatText::to_string((page_max*cur_page) +i  + 1));
+				info += border(' ', 15, 0);
+				info += border('-', (screen_width - screen_width/6) , FormatText::to_string((page_max*cur_page) +i  + 1));
 
-				s += "\n[";
-				s += FormatText::to_string(i + 1);
-				s += "]";
-				s += paginated_results[i + (cur_page * page_max)].toString();
+				info += "\n[";
+				info += FormatText::to_string(i + 1);
+				info += "]";
+				info += paginated_results[i + (cur_page * page_max)].toString();
 
-				s += border(' ', 15);
-				s += border('-', (screen_width - screen_width/6), FormatText::to_string((page_max*cur_page) +i  + 1));
-				s += "\n";
+				info += border(' ', 15);
+				info += border('-', (screen_width - screen_width/6), FormatText::to_string((page_max*cur_page) +i  + 1));
+				info += "\n";
+
+				if(i + (cur_page * page_max) +1 >= paginated_results.size())
+					last_page = true;
+				else
+					last_page = false;
 			}
-			else
-				last_page = true;
 		}
 	}
 	else
-		s += "\nNO RESULTS FOUND.\n";
+		info += "\nNO RESULTS FOUND.\n";
 
+	//create s
+	s += "\n";
+	//s += border(' ', screen_width/2 - );
+	s += "PAGE ";
+
+	s += FormatText::to_string(cur_page + 1);
+	s += "/";
+	s += FormatText::to_string( (paginated_results.size()/page_max) + (paginated_results.size()%page_max) );
+	s += "\nSEARCH RESULTS: ";
+	s += FormatText::to_string(paginated_results.size());
+	s += "\n";
+
+	//append info to s
+	s += info;
 	cout << s;
 
 	string ui = prompt("\n[#]: ");
@@ -339,11 +352,8 @@ void UserInterface::infoScreen(){
 	if(is_int(ui)){
 		int selection = atoi( ui.c_str() );
 
-		if(selection <= page_max){
-			cout << "\nOPEN.";
-			//[(cur_page * page max) + i - 1] == selection index
-			//send to full page with those aruments
-		}
+		if(selection <= page_max)
+			pageScreen((cur_page * page_max) + selection -1);
 		else
 			cout << "out of range.";
 	}
@@ -352,7 +362,40 @@ void UserInterface::infoScreen(){
 	}
 
 }
-void UserInterface::pageScreen(){}
+void UserInterface::pageScreen(int selection){
+	vector<info_packet> paginated_results = qe->get_ip_results();
+
+	//Info Screen CMDS
+	vector<cmd> infoScreen_cmds;
+	infoScreen_cmds.push_back(home);
+	infoScreen_cmds.push_back(config);
+	infoScreen_cmds.push_back(newDoc);
+	infoScreen_cmds.push_back(display);
+	infoScreen_cmds.push_back(next);								//should be command specific to page
+	infoScreen_cmds.push_back(previous);							//should be command specific to current page
+
+	infoScreen_cmds.push_back(back);								//should be back to search reults if current_page = page_result
+	//tmp pageBack
+	infoScreen_cmds.push_back(pageBack);	
+
+	infoScreen_cmds.push_back(quit);
+
+	set_cmds(infoScreen_cmds);
+
+	//start
+	system("clear");
+
+	string title = "\"";
+	title += paginated_results[selection].title;
+	title += "\"";
+
+	header( title, " nothing to display ", "make an art function");
+	cout << paginated_results[selection].page_toString();					//should be page version to string	
+
+	string ui = prompt("\n[?]: ");
+	run_cmd(ui);
+
+}
 
 
 
@@ -376,7 +419,7 @@ void UserInterface::set_cmds(vector<cmd> cmds){
 bool UserInterface::run_cmd(string cmd){
 	bool is_cmd = false;
 
-	//make sure it is in current cmd list...
+	//make sure it is in current cmd list...						//should be run for individual commands for multiple functions to a key
 	bool available = false;
 	for(int i=0; i<cur_cmds.size() ; i++){
 		if(cmd.compare(cur_cmds[i].trigger) == 0)
@@ -429,6 +472,10 @@ bool UserInterface::run_cmd(string cmd){
 		//back
 		if(cmd.compare(back.trigger) == 0)
 			searchScreen();
+
+		//tmp pageBack
+		if(cmd.compare(pageBack.trigger) == 0)
+			infoScreen();
 
 		is_cmd = true;
 	}

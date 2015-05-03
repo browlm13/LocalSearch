@@ -227,6 +227,34 @@ struct info_packet{
 
 		return s;
 	}
+
+	std::string page_toString(){
+		string s;
+
+		/*
+			edit: need indent for lines.
+											*/
+
+		if(title.size() > 0){
+			s += "\n\t\t\t\t\tTitle: ";
+			s += title;
+		}
+
+		if(contributors.size() > 0){
+			s += "\n\t\t\t\t\tContributors: ";
+			s += contributors;
+		}
+		
+		if(text.size() > 0){
+			s += "\n\n\t\t ";
+			s += text;
+		}
+
+		s += "\n\n";
+
+		return s;
+
+	}
 };
 
 //--------------------------
