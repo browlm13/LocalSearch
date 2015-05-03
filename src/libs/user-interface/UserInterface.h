@@ -13,6 +13,18 @@ class UserInterface {
 	//dimensions
 	int screen_width;
 
+/*
+	enum Screen{
+
+			void homeScreen();
+			void searchScreen();
+			void newDocScreen();
+			void configScreen();
+			void quitScreen();
+			void infoScreen();
+			void pageScreen(int selection);
+	}
+*/
 	//cmd handling
 	struct cmd{
 		std::string display_name;
@@ -32,9 +44,13 @@ public:
 		//get screen dimensions
 		screen_width = 120;
 
-		//page info
+		//info info
 		page_max = 3;
 		cur_page = 0;
+
+		//page info
+		char_count = 0;
+		last_page_page = false;
 
 		//init
 		hidden = false;
@@ -57,6 +73,11 @@ public:
 	}
 
 	void init();
+
+	/*
+		edit: enum of screen value, each
+		should return a number speccific to theres.
+													*/
 
 	//screens
 	void homeScreen();
@@ -83,6 +104,8 @@ public:
 	int cur_page;
 	int page_max;
 	bool last_page;
+	int char_count;
+	bool last_page_page;
 
 	//flags
 	bool hidden;

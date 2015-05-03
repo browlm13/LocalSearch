@@ -207,7 +207,7 @@ struct info_packet{
 						cur_line++;
 					}
 
-					else if(new_line_count > new_line && text.at(i) == ' '){
+					else if( (new_line_count > new_line && text.at(i) == ' ') || (new_line_count > new_line + 10)){
 						cut_text += "\n";
 						cut_text += indent;
 						new_line_count = 0;
@@ -228,27 +228,71 @@ struct info_packet{
 		return s;
 	}
 
-	std::string page_toString(){
-		string s;
+	std::string page_toString(int &char_count, bool &last_page){
+		bool more_text = true;
 
-		/*
-			edit: need indent for lines.
-											*/
+		//string to return
+		std::string s;
 
-		if(title.size() > 0){
-			s += "\n\t\t\t\t\tTitle: ";
-			s += title;
-		}
+		//page dimesnions (should be set by terminal dimesions)
+		int max_lines = 17;
+		int new_lines = 90;
+
+		//keeps track of page details
+		int cur_line_count = 0;
+		int line_char_count = 0;
+
+		//text to display
+		std::string displayed_text = " ";			//starts from &char_count
+
 
 		if(contributors.size() > 0){
-			s += "\n\t\t\t\t\tContributors: ";
+			s += "\n\t\t\t\t\tCONTRIBUTORS: ";
 			s += contributors;
+			cur_line_count++;
+			s += "\n";
+		}	
+
+		while ((cur_line_count < max_lines) && more_text){
+
+				//if text remains
+				if( (text.size() - char_count -1) > 0 ){
+
+					//get rid of fuck up escapes
+					if((text.at(char_count) == '\n') || (text.at(char_count) == '\t'))
+						displayed_text += " ";
+					
+					//new line
+					else if ((line_char_count > new_lines) && (text.at(char_count) == ' ')){
+						displayed_text += "\n\t\t";
+						line_char_count = 0;
+						cur_line_count++;
+					}
+					//forced new line
+					else if(line_char_count > (new_lines + 5) ){
+						displayed_text += "-\n\t\t-";
+						line_char_count = 0;
+						cur_line_count++;
+					}
+					//character grab
+					else{
+						displayed_text += text.at(char_count);
+						line_char_count++;
+					}
+
+					char_count++;
+				}
+				else 
+					more_text = false;
 		}
-		
-		if(text.size() > 0){
-			s += "\n\n\t\t ";
-			s += text;
-		}
+
+		if(!more_text)
+			last_page = false;
+		else
+			last_page = true;
+
+		s += "\n\n\t\t ";
+		s += displayed_text;
 
 		s += "\n\n";
 

@@ -390,7 +390,10 @@ void UserInterface::pageScreen(int selection){
 	title += "\"";
 
 	header( title, " nothing to display ", "make an art function");
-	cout << paginated_results[selection].page_toString();					//should be page version to string	
+	cout <<  paginated_results[selection].page_toString(char_count, last_page_page);					//should be page version to string	
+
+	//use lase_page_page for commands
+
 
 	string ui = prompt("\n[?]: ");
 	run_cmd(ui);
