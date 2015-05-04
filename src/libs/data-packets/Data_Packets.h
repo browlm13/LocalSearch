@@ -89,6 +89,24 @@ struct word_packet{
 	//destructor
 	~word_packet(){ }
 
+	//operator comparison overloads
+	inline bool operator==(const word_packet& rhs){ 
+		bool equal = true;
+
+		if(this->id != rhs.id)
+			equal = false;
+		if(this->tf != rhs.tf)
+			equal = false;
+		if(this->word.compare(rhs.word) != 0)
+			equal = false;
+
+		return equal;
+	}
+	
+	inline bool operator!=(const word_packet& rhs){
+		return !(*this == rhs);
+	}
+
 		//( toStirng Methods )
 	//parent_head_toString();
 	std::string parent_head_toString(){

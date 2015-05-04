@@ -17,6 +17,21 @@ vector<word_packet> IndexHandler::search(const string query_term){
 	return results;
 }
 
+void IndexHandler::addWord( word_packet wp )
+	{loader->addWord(wp);}
+
+//--------------------------
+//		Maintincene		
+//			--------------------------
+
+void IndexHandler::saveIndex(string path){
+
+	//can only save under two condition (unsaved && builder)
+	if( (dataStruct_type == DataStuct_Types::BUILDER) ){
+		loader->save(path);
+	}
+}
+
 //--------------------------
 //		setup
 //			--------------------------
@@ -33,6 +48,11 @@ void IndexHandler::set_dataStruct(int type){
 		//loader = new IndexLoader_Tree;
 	}
 
+	if(dataStruct_type == DataStuct_Types::HASH){
+		loader = &loader_avl;
+		//loader = new IndexLoader_Tree;
+	}
+
 	if(dataStruct_type == DataStuct_Types::BUILDER){
 		loader = &builder_avl;
 		//loader = new IndexBuilder_Tree;
@@ -40,22 +60,6 @@ void IndexHandler::set_dataStruct(int type){
 
 	//set result amount
 	loader->set_result_amount(result_amount);
-}
-
-
-void IndexHandler::addWord( word_packet wp )
-	{loader->addWord(wp);}
-
-//--------------------------
-//		Maintincene		
-//			--------------------------
-
-void IndexHandler::saveIndex(string path){
-
-	//can only save under two condition (unsaved && builder)
-	if( (dataStruct_type == DataStuct_Types::BUILDER) ){
-		loader->save(path);
-	}
 }
 
 void IndexHandler::close (){

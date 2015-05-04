@@ -127,28 +127,8 @@ void XMLShark::_parse(string path, long location){
 						str += c;
 
 					//ELSE ( c is not a digit or a leter ) && ( str size is > 0)
-					else if ( str.size() > 0 ){
+					else if ( str.size() > 0 )
 						format_push_clear(fm_strs, str);
-
-						//TMP
-							//bool stop_word = false;
-
-							//lower case
-							//FormatText::lower_case(str);
-
-							//remove stop word
-							//stop_word = swh.is_stop_word(str);
-
-							//stem
-							//Porter2Stemmer::stem(str);
-
-							//add if not a stop word
-							//if(!stop_word){
-								//fm_strs.push_back(str);
-								//str.clear();
-							//}
-						//TMP
-					}
 
 					c = file.get();
 				}
@@ -233,7 +213,13 @@ void XMLShark::format_push_clear(vector<string> &v, string &s){
 						*/
 
 	FormatText::lower_case(s);
-	Porter2Stemmer::stem(s);
+	//Porter2Stemmer::stem(s);
+	//s = FormatText::format_word(s);
+/*
+	//tmp
+	if(swh.is_stop_word(s))
+		cout << s << endl;
+*/
 	v.push_back(s);
 	s.clear();
 /*

@@ -5,6 +5,9 @@
 
 #include "data-packets/Data_Packets.h"
 
+//TMP***
+//#include "formatting/StopWords_Hash.h"
+
 using namespace std;
 
 //--------------------------
@@ -42,6 +45,16 @@ void QueryEngine::remove_doc(int selection){
 	ph->remove_doc_from_dataBase(selection, database);	//will return error
 }
 
+void QueryEngine::toggle_type(){
+	int type = database.get_dataStruct_type();
+
+	if(type == DataStuct_Types::AVL)
+		type = DataStuct_Types::HASH;
+	else
+		type = DataStuct_Types::AVL;
+
+	database.set_dataStruct_type(type);
+}
 //--------------------------
 //		query processsing
 //			--------------------------
@@ -64,6 +77,9 @@ void QueryEngine::perform_operation(string unkown, vector<word_packet> &running_
 		wps = ih->search(unkown);
 
 		if(wps.size() > 0){
+
+			//TMP***
+
 
 			//or
 			if(cur_operation.compare("||") == 0){

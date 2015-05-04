@@ -13,7 +13,7 @@ void IndexBuilder_Tree::save(string path){
 	close_file();
 }
 
-void IndexBuilder_Tree::search( std::string &query, std::vector<word_packet> &top_results )
+void IndexBuilder_Tree::search( std::string query, std::vector<word_packet> &top_results )
 	{_search(root, query, top_results);}
 
 void IndexBuilder_Tree::clear()
@@ -63,7 +63,7 @@ void IndexBuilder_Tree::_write( IB_Node *ptr ){
 		}
 }
 
-void IndexBuilder_Tree::_search( IB_Node*& cur, std::string &query, std::vector<word_packet> &top_results ){
+void IndexBuilder_Tree::_search( IB_Node*& cur, std::string query, std::vector<word_packet> &top_results ){
 
 	//insert when null, then insert into child tree
 	if( !cur ){}

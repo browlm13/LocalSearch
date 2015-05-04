@@ -1,60 +1,58 @@
-#ifndef HASH_H
-#define HASH_H
+#ifndef INDEXLOADER_HASH_H
+#define INDEXLOADER_HASH_H
 
 #include <iostream>
 #include <string>
 #include <vector>
 
+#include "data-structs/avl.h"
+#include "IndexLoader_Interface.h"
+#include "IndexBuilder_Tree_Child.h"
+#include "data-packets/Data_Packets.h"
+
 using namespace std;
 
-template <class T>
-class hash{
+class IndexLoader_Hash : public IndexLoader_Interface {
 
 	unsigned size;	//some prime number
 
 	//element
 	struct element{
-		element(std::string key, T value) : key(key), value(value){}
+		element(std::string key, IndexBuilder_Tree_Child value) : key(key), value(value){}
 		std::string key;
-		T value;
+		IndexBuilder_Tree_Child value;
 	};
 
-	//std::vector< std::vector<element> > table(10, std::vector<element>(10));//, std::vector<element>(1));
 	vector<element> *table;
 
-	//array[size] of vectors(deletion not neccisarry),
-
-	//for stop words hash
-		//each element in vector contains a string
-
-	//for index loader hash
-		//each element in the vector contains a (word) and its avl tree of doc_id_packets
-		//an (index loader tree child) as the value
-
-	unsigned index(std::string key);		//returns index
+	unsigned 					index 	(std::string key);		//returns index
+	void 						_add	(std::string key, word_packet wp);
+	IndexBuilder_Tree_Child* 	_get	(std::string key);
 
 public:
 	void 	clear			();
-	void 	add				(std::string key, T value);		//hashfunction %size for index in array of vecotrs. push_back on vector
-	T* 		get				(std::string key);				///what happens if not found? return null
+	void search(std::string query, std::vector<word_packet> &top_results);
+	void addWord(word_packet &wp);
 
-/*
-	//for both
-	bool	check			(std::string key);
-	//for index loader hash
-	bool	get_results	(std::string key, std::vector<word_packet> &results)	//appends top results to vector
-*/
-	hash() {
+	IndexLoader_Hash() {
 		size = 2027;
 		table = new vector<element> [size];
 	}
-	~hash(){
+	~IndexLoader_Hash(){
 		delete [] table;
 	}
 };
 
-template<class T>
-unsigned hash<T>::index(std::string key){
+void IndexLoader_Hash::search(std::string query, std::vector<word_packet> &top_results){
+	IndexBuilder_Tree_Child *ibc = &(*(_get(query)));
+	if(ibc)
+		ibc->topResults(top_results, 999999999);
+}
+
+void IndexLoader_Hash::addWord(word_packet &wp)
+{_add(wp.word, wp);}
+
+unsigned IndexLoader_Hash::index(std::string key){
 	//primes
 	const unsigned A = 54059;
 	const unsigned B = 76963;
@@ -66,37 +64,28 @@ unsigned hash<T>::index(std::string key){
 	return d % size;
 }
 
-template<class T>
-void hash<T>::add(std::string key, T value){
-	element e(key, value);				//value must be an avl child tree
-	table[index(key)].push_back(e);		//for index loader hash table[index(key)].insert
-}
-
 //index loader hash add
-/*
-template<class T>
-void hash<T>::add(std::string key, T doc_id_packet, ){
+void IndexLoader_Hash::_add(std::string key, word_packet wp ){
 	unsigned loc = index(key);
 
-	if(get(key))
+	if(_get(key))
 	{
-		for(int i=0; i<table[loc].size()); i++){
+		for(int i=0; i<table[loc].size(); i++){
 			if(table[loc][i].key.compare(key) == 0)
-				table[loc][i].value.insert(id);
+				table[loc][i].value.insert(wp);
 		}
 	}
 	else 
 	{
-		index_builder_child_tree ibct;
-		ibct.insert(id);
+		IndexBuilder_Tree_Child ibct;
+		ibct.insert(wp);
 		element e(key, ibct);			//value = index_builder_child_tree
 		table[loc].push_back(e);
 	}
 }
-*/
-template<class T>
-T* hash<T>::get(std::string key){
-	T* v = 0;
+
+IndexBuilder_Tree_Child* IndexLoader_Hash::_get(std::string key){
+	IndexBuilder_Tree_Child* v = 0;
 	unsigned loc = index(key);
 
 	if(table[loc].size() > 0){
@@ -109,25 +98,7 @@ T* hash<T>::get(std::string key){
 	return v;
 }	
 
-
-template<class T>
-void hash<T>::clear(){
+void IndexLoader_Hash::clear(){
 	delete [] table;
 }
-#endif //HASH_H
-
-
-/*
-#define A 54059 // a prime
-#define B 76963 // another prime
-#define C 86969 // yet another prime
-unsigned hash_str(const char* s)
-{
-   unsigned h = 31 // also prime;
-   while (*s) {
-     h = (h * A) ^ (s[0] * B);
-     s++;
-   }
-   return h; // or return h % C;
-}
-*/
+#endif //INDEXLOADER_HASH_H

@@ -8,14 +8,6 @@
 using namespace std;
 
 				/*
-					things to think about:	doc concistancy when switching screens.
-								back and forward screen navigation.
-								just like (s)ave can appear and dissapear...
-								some letter will always bring you to search
-								if avaible from any screen.
-															*/
-
-				/*
 					edit:	need diffrent types of messages
 																*/
 
@@ -82,8 +74,13 @@ void UserInterface::homeScreen(){
 			for open (searchable) files,
 			and/or unsaved files.		*/
 
+	string message = "Enter a number to load a saved document.";
 
-	header(" HOME ", "Enter a number to load a saved document, or hit 'd' for more options.", "make an art function");
+	if(hidden)
+		message = "Enter a number to load a saved document, or hit 'd' for more options.";
+
+
+	header(" HOME ", message, "make an art function");
 
 	cout << dataBase_toString() << endl;
 
@@ -173,6 +170,8 @@ void UserInterface::newDocScreen(){
 		//TMP
 		cout << "opening " << ui << endl;
 		qe->add_newDoc(ui);
+	}else{
+		newDocScreen();
 	}
 
 	searchScreen();
@@ -213,7 +212,7 @@ void UserInterface::searchScreen(){
 
 	if(!results_found)
 		cout << "\tNOT FOUND";
-	
+
 	results_found = true;
 
 		//naviation init
@@ -264,18 +263,6 @@ void UserInterface::searchScreen(){
 	}
 	searchScreen();
 
-	//string query = prompt("[?query?]: ");
-		//***still working***
-		//*will jump into in*
-		//*-foScreen() if su*
-		//*-sessful.        *
-		//*******************
-
-	/*
-		edit: "s" should only be visible when
-				possible.
-													*/
-
 	//if s
 	//qe->save_NewDoc();			//error return
 
@@ -291,19 +278,37 @@ void UserInterface::configScreen(){
 		history.push_back(cur_screen);
 
 			//NewDoc Screen CMDS
-	vector<cmd> newDocScreen_cmds;
-	newDocScreen_cmds.push_back(home);
-	newDocScreen_cmds.push_back(config);
-	newDocScreen_cmds.push_back(newDoc);
-	newDocScreen_cmds.push_back(back);
-	newDocScreen_cmds.push_back(quit);
-	newDocScreen_cmds.push_back(display);
+	vector<cmd> configScreen_cmds;
+	configScreen_cmds.push_back(home);
+	configScreen_cmds.push_back(config);
+	configScreen_cmds.push_back(newDoc);
+	configScreen_cmds.push_back(back);
+	configScreen_cmds.push_back(toggle);
+	configScreen_cmds.push_back(quit);
+	configScreen_cmds.push_back(display);
 
-	set_cmds(newDocScreen_cmds);
+	set_cmds(configScreen_cmds);
 
 	header(" Configure ", "Remove a document from database?", "make an art function");
 
 	cout << dataBase_toString() << endl;
+
+	//datastruct type
+	database_packet database;
+	database = qe->get_dataBase();
+
+	int type = database.get_dataStruct_type();
+	string string_type;
+
+	string_type += border(' ', screen_width/2 - screen_width/10);
+	string_type += "Datastructure type: ";
+
+	if(type == DataStuct_Types::AVL)
+		string_type += "AVL";
+	else
+		string_type += "HASH";
+
+	cout << string_type << endl;
 
 
 	//start
@@ -325,15 +330,6 @@ void UserInterface::configScreen(){
 	}
 
 	configScreen();
-
-	//string settings = prompt("[set]: ");
-		//***still working***
-
-	//if h
-	//homeScreen();
-
-	//if q
-	//quitScreen();
 }
 
 void UserInterface::quitScreen(){
@@ -526,8 +522,11 @@ bool UserInterface::run_cmd(string cmd){
 			qe->save_newDoc();
 
 			//tmp
-			homeScreen();
+			homeScreen();							//change shouldnt close upon saving
 		}
+		//toggle
+		if(cmd.compare(toggle.trigger) == 0)
+			qe->toggle_type();
 		//display
 		if(cmd.compare(display.trigger) == 0){
 			if(hidden)
@@ -585,10 +584,6 @@ bool UserInterface::run_cmd(string cmd){
 			else
 				back_screen();
 		}
-
-		//tmp pageBack
-		if(cmd.compare(pageBack.trigger) == 0)
-			infoScreen();
 
 		is_cmd = true;
 	}

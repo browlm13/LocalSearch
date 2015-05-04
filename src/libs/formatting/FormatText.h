@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 
+//#include "StopWords_Hash.h"
+
 using std::string;
 using std::vector;
 
@@ -22,6 +24,8 @@ using std::vector;
 
 class FormatText {
 
+//	static StopWords_Hash swh;
+
 public:
 	//text formatting
 	static string format_word( const string raw_word );
@@ -36,7 +40,6 @@ public:
 	/*
 		edit: should be namespace
 		and functions no class.
-
 										*/
 
 	template<class T>

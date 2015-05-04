@@ -5,6 +5,8 @@
 #include <vector>
 #include <fstream>
 
+//#include "formatting/StopWords_Hash.h"
+
 //using namespace std;
 using std::string;
 using std::vector;
@@ -30,6 +32,11 @@ using std::fstream;
 												*/
 
 class XMLShark {
+
+//tmp***
+private:
+	//StopWords_Hash swh;
+
 protected:
 	fstream file;
 	string path_name;

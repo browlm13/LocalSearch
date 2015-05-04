@@ -35,7 +35,7 @@ class UserInterface {
 			trigger = trigger_arg;
 		}
 
-	} quit, home, config, newDoc, back, save, display, next, previous, pageBack;
+	} quit, home, config, newDoc, back, save, display, next, previous, toggle;
 	std::vector<cmd> cur_cmds;
 
 public:
@@ -64,16 +64,12 @@ public:
 		home.set("(h)ome", "h");
 		config.set("(c)onfig", "c");
 		newDoc.set("(n)ewDoc", "n");
-
-		//tmp
 		back.set("(b)ack", "b");
-		//tmp back info version
-		pageBack.set("(p) back to results", "p");
-
 		save.set("(s)ave", "s");
 		display.set("(d)isplay", "d");
 		next.set("(j) next page", "j");
 		previous.set("(k) previous page", "k");
+		toggle.set("(t)oggle datastructure type", "t");
 
 	}
 

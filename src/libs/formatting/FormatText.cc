@@ -18,6 +18,7 @@ string FormatText::format_word( const string raw_word ){
 
 	//convert to lower case
 	formatted_word = lower_case( raw_word );
+	//transform(raw_word.begin(), raw_word.end(), raw_word.begin(), ::tolower);
 
 /*
 	if (swt.on_list(formatted_word))
@@ -47,9 +48,8 @@ vector<string> FormatText::format_query( const string raw_query ){
 
 	//convert case, convert operands
 	for(int i = 0; i < formatted_query.size(); i++){
-		transform(formatted_query[i].begin(), formatted_query[i].end(), formatted_query[i].begin(), ::tolower);
 		conv_operands(formatted_query[i]);
-
+		transform(formatted_query[i].begin(), formatted_query[i].end(), formatted_query[i].begin(), ::tolower);
 		//remove stop words
 		//stem
 		Porter2Stemmer::stem(formatted_query[i]);
@@ -62,13 +62,13 @@ vector<string> FormatText::format_query( const string raw_query ){
 //		convert operands	
 //			--------------------------
 void FormatText::conv_operands(string &unkown){
-	if(unkown.compare("and") == 0)
+	if(unkown.compare("AND") == 0)
 		unkown = "&&";
 
-	if(unkown.compare("or") == 0)
+	if(unkown.compare("OR") == 0)
 		unkown = "||";
 	
-	if(unkown.compare("not") == 0)
+	if(unkown.compare("NOT") == 0)
 		unkown = "!!";
 }
 

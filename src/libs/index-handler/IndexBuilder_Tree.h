@@ -43,7 +43,7 @@ class IndexBuilder_Tree : public avl<IB_Node>, public IndexLoader_Interface {
 
 	void _addWord( IB_Node*& cur, word_packet &wp );
 	void _write( IB_Node *ptr );
-	void _search( IB_Node*& cur, std::string &query, std::vector<word_packet> &top_results );
+	void _search( IB_Node*& cur, std::string query, std::vector<word_packet> &top_results );
 	void open_file( string name );
 	void close_file();
 
@@ -53,7 +53,7 @@ class IndexBuilder_Tree : public avl<IB_Node>, public IndexLoader_Interface {
 public:
 
 	void addWord( word_packet &wp );				
-	void search(std::string &querty, std::vector<word_packet> &top_results);
+	void search(std::string query, std::vector<word_packet> &top_results);
 	void clear();
 	void save(std::string path);
 
