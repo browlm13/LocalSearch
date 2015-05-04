@@ -228,8 +228,10 @@ struct info_packet{
 		return s;
 	}
 
-	std::string page_toString(int &char_count, bool &last_page){
+	std::string page_toString(int &char_count_ref, bool &last_page, bool &first_page, bool change_page_page){
 		bool more_text = true;
+		bool begin = false;
+		int char_count = char_count_ref;
 
 		//string to return
 		std::string s;
@@ -254,6 +256,9 @@ struct info_packet{
 		}	
 
 		while ((cur_line_count < max_lines) && more_text){
+
+				if(text.size() > char_count)
+					begin = true;
 
 				//if text remains
 				if( (text.size() - char_count -1) > 0 ){
@@ -282,19 +287,30 @@ struct info_packet{
 
 					char_count++;
 				}
-				else 
+				else{
 					more_text = false;
+				}
+
 		}
 
 		if(!more_text)
-			last_page = false;
-		else
 			last_page = true;
+		else
+			last_page = false;
+
+		if(!begin)
+			first_page = false;
+		else
+			first_page = true;
 
 		s += "\n\n\t\t ";
 		s += displayed_text;
 
 		s += "\n\n";
+
+		//update char count if true
+		if(change_page_page)
+			char_count_ref = char_count;
 
 		return s;
 

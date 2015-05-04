@@ -13,18 +13,18 @@ class UserInterface {
 	//dimensions
 	int screen_width;
 
-/*
-	enum Screen{
 
-			void homeScreen();
-			void searchScreen();
-			void newDocScreen();
-			void configScreen();
-			void quitScreen();
-			void infoScreen();
-			void pageScreen(int selection);
-	}
-*/
+	enum Screens{
+
+			HOME,
+			NEWDOC,
+			SEARCH,
+			CONFIG,
+			QUIT,
+			INFO,
+			PAGE
+	};
+
 	//cmd handling
 	struct cmd{
 		std::string display_name;
@@ -51,9 +51,14 @@ public:
 		//page info
 		char_count = 0;
 		last_page_page = false;
+		first_page_page = true;
+		change_page_page = false;
+
+		//info setup
+		results_found = true;
 
 		//init
-		hidden = false;
+		hidden = true;
 
 		quit.set("(q)uit", "q");
 		home.set("(h)ome", "h");
@@ -79,6 +84,9 @@ public:
 		should return a number speccific to theres.
 													*/
 
+	//navigation
+	void back_screen();
+
 	//screens
 	void homeScreen();
 	void searchScreen();
@@ -86,7 +94,7 @@ public:
 	void configScreen();
 	void quitScreen();
 	void infoScreen();
-	void pageScreen(int selection);
+	void pageScreen(int selection, bool change_page);
 
 	//display
 	std::string results_toString();
@@ -98,14 +106,26 @@ public:
 	std::string display_glasses(int orientation);
 
 	//navigation
-	//next_screen
 	//cur_screen
-	//back_screen
+	int cur_screen;
+	//history vector
+	vector<int> history;
+
+	//page/info naviagation
 	int cur_page;
 	int page_max;
 	bool last_page;
 	int char_count;
+	vector<int> char_count_history;
 	bool last_page_page;
+	bool first_page_page;
+	bool change_page_page;
+
+	int page_selection;
+
+	//info tmp
+	bool results_found;
+
 
 	//flags
 	bool hidden;

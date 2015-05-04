@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cstdlib>
 #include "UserInterface.h"
 
 #include "data-packets/Data_Packets.h"
@@ -26,7 +27,46 @@ void UserInterface::init(){
 	homeScreen();
 }
 
+//launches the next screen
+void UserInterface::back_screen(){
+
+	//if not more in history vector, set tto home
+	//set last element of history vector to current screen
+	//pop_back history vector
+
+	if(history.size() <= 1)
+		homeScreen();
+
+	//otherwise set last screen to current screen, and remove from history
+	history.pop_back();
+	cur_screen = history[history.size() - 1];
+	history.pop_back();
+
+
+	if(cur_screen == HOME)
+		homeScreen();
+	else if(cur_screen == SEARCH)
+		searchScreen();
+	else if(cur_screen == NEWDOC)
+		newDocScreen();
+	else if(cur_screen == CONFIG)
+		configScreen();
+	else if(cur_screen == QUIT)
+		quitScreen();
+	else if(cur_screen == INFO)
+		infoScreen();
+	/*
+	if(cur_screen == PAGE)
+		pageScreen();
+	*/
+}
+
 void UserInterface::homeScreen(){
+
+	//naviation init home screen clears history
+	cur_screen = HOME;
+	history.clear();
+	history.push_back(cur_screen);
 
 	//Home Screen CMDS
 	vector<cmd> homeScreen_cmds;
@@ -43,7 +83,7 @@ void UserInterface::homeScreen(){
 			and/or unsaved files.		*/
 
 
-	header(" local SEARCH ", "make a message function. it should be dope. indent, batman trex aligator large planet earth solar wing tree man bike kat", "make an art function");
+	header(" HOME ", "Enter a number to load a saved document, or hit 'd' for more options.", "make an art function");
 
 	cout << dataBase_toString() << endl;
 
@@ -101,20 +141,28 @@ void UserInterface::homeScreen(){
 		run_cmd(ui);
 	}
 
+	homeScreen();
 }
 
 void UserInterface::newDocScreen(){
+
+		//naviation init
+	cur_screen = NEWDOC;
+	if(cur_screen != history[history.size()-1])
+		history.push_back(cur_screen);
+
 		//NewDoc Screen CMDS
 	vector<cmd> newDocScreen_cmds;
 	newDocScreen_cmds.push_back(home);
 	newDocScreen_cmds.push_back(config);
+	newDocScreen_cmds.push_back(back);
 	newDocScreen_cmds.push_back(quit);
 	newDocScreen_cmds.push_back(display);
 
 	set_cmds(newDocScreen_cmds);
 
 	//start
-	header(" NEW doc ", "open a new document?", "make an art function");
+	header(" NEW doc ", "Open a new document?", "make an art function");
 
 	string ui = prompt("\n[path]: ");
 
@@ -158,10 +206,26 @@ void UserInterface::newDocScreen(){
 
 void UserInterface::searchScreen(){
 
+	//warning top
+		//TMP should be message
+	if(qe->get_unsavedFlag())
+		cout << "UNSAVED DOCUMENT";
+
+	if(!results_found)
+		cout << "\tNOT FOUND";
+	
+	results_found = true;
+
+		//naviation init
+	cur_screen = SEARCH;
+	if(cur_screen != history[history.size()-1])
+		history.push_back(cur_screen);
+
 		//Search Screen CMDS
 	vector<cmd> searchScreen_cmds;
 	searchScreen_cmds.push_back(home);
 	searchScreen_cmds.push_back(config);
+	searchScreen_cmds.push_back(back);
 	searchScreen_cmds.push_back(quit);
 	searchScreen_cmds.push_back(display);
 
@@ -176,16 +240,11 @@ void UserInterface::searchScreen(){
 			and/or unsaved files.		*/
 
 
-	header(" SEARCH ", "no message option.", display_glasses(1));
+	header(" SEARCH ", "Type a word or phrase to search open document.", display_glasses(1));
 
 		/*
 			edit:	should have a ui function that displays
 					relevant doc info.						*/
-
-	//TMP should be message
-	if(qe->get_unsavedFlag()){
-		cout << "\n\t\t\tUNSAVED DOCUMENT\n";
-	}
 
 	//should display document information
 	cout << display_cur_doc(2) << endl;
@@ -195,13 +254,15 @@ void UserInterface::searchScreen(){
 
 	//check if ui is a cmd
 	if(!run_cmd(ui)){
-		//search
 		//if results found
-		if(qe->search(ui))
+		if(qe->search(ui)){
 			infoScreen();
+			results_found = true;
+		}
 		else
-			searchScreen();
+			results_found = false;
 	}
+	searchScreen();
 
 	//string query = prompt("[?query?]: ");
 		//***still working***
@@ -223,17 +284,24 @@ void UserInterface::searchScreen(){
 }
 
 void UserInterface::configScreen(){
+
+			//naviation init
+	cur_screen = CONFIG;
+	if(cur_screen != history[history.size()-1])
+		history.push_back(cur_screen);
+
 			//NewDoc Screen CMDS
 	vector<cmd> newDocScreen_cmds;
 	newDocScreen_cmds.push_back(home);
 	newDocScreen_cmds.push_back(config);
 	newDocScreen_cmds.push_back(newDoc);
+	newDocScreen_cmds.push_back(back);
 	newDocScreen_cmds.push_back(quit);
 	newDocScreen_cmds.push_back(display);
 
 	set_cmds(newDocScreen_cmds);
 
-	header(" Configure ", "remove a document from database?", "make an art function");
+	header(" Configure ", "Remove a document from database?", "make an art function");
 
 	cout << dataBase_toString() << endl;
 
@@ -256,6 +324,8 @@ void UserInterface::configScreen(){
 		run_cmd(ui);
 	}
 
+	configScreen();
+
 	//string settings = prompt("[set]: ");
 		//***still working***
 
@@ -267,16 +337,25 @@ void UserInterface::configScreen(){
 }
 
 void UserInterface::quitScreen(){
-	cout << "quitScreen" << endl;
 	//checks if unsaved doc
 	//if unsaved gives warning
 	//if you choose not to quit
 	//after warning, brings you
 	//back to screen q was pressed
 	system("clear");
+	exit(1);
 }
 
 void UserInterface::infoScreen(){
+	//naviation init
+	cur_screen = INFO;
+	if(cur_screen != history[history.size()-1])
+		history.push_back(cur_screen);
+
+	//reset char_count
+	char_count = 0;
+	char_count_history.clear();
+
 	vector<info_packet> paginated_results = qe->get_ip_results();
 
 	//Info Screen CMDS
@@ -350,10 +429,10 @@ void UserInterface::infoScreen(){
 
 	//check if ui is a number
 	if(is_int(ui)){
-		int selection = atoi( ui.c_str() );
+		page_selection = atoi( ui.c_str() );
 
-		if(selection <= page_max)
-			pageScreen((cur_page * page_max) + selection -1);
+		if(page_selection <= page_max)
+			pageScreen((cur_page * page_max) + page_selection -1, change_page_page);
 		else
 			cout << "out of range.";
 	}
@@ -361,8 +440,13 @@ void UserInterface::infoScreen(){
 		run_cmd(ui);
 	}
 
+	infoScreen();
+
 }
-void UserInterface::pageScreen(int selection){
+void UserInterface::pageScreen(int selection, bool change_page){
+	//naviation init for PAGE does not add to history// just for special back function
+	cur_screen = PAGE;
+
 	vector<info_packet> paginated_results = qe->get_ip_results();
 
 	//Info Screen CMDS
@@ -373,11 +457,7 @@ void UserInterface::pageScreen(int selection){
 	infoScreen_cmds.push_back(display);
 	infoScreen_cmds.push_back(next);								//should be command specific to page
 	infoScreen_cmds.push_back(previous);							//should be command specific to current page
-
-	infoScreen_cmds.push_back(back);								//should be back to search reults if current_page = page_result
-	//tmp pageBack
-	infoScreen_cmds.push_back(pageBack);	
-
+	infoScreen_cmds.push_back(back);
 	infoScreen_cmds.push_back(quit);
 
 	set_cmds(infoScreen_cmds);
@@ -389,15 +469,14 @@ void UserInterface::pageScreen(int selection){
 	title += paginated_results[selection].title;
 	title += "\"";
 
-	header( title, " nothing to display ", "make an art function");
-	cout <<  paginated_results[selection].page_toString(char_count, last_page_page);					//should be page version to string	
-
-	//use lase_page_page for commands
-
+	header( title, " ", "make an art function");
+	cout <<  paginated_results[selection].page_toString(char_count, last_page_page, first_page_page, change_page_page);					//should be page version to string	
+	change_page_page = false;
 
 	string ui = prompt("\n[?]: ");
 	run_cmd(ui);
 
+	pageScreen(page_selection, change_page_page);
 }
 
 
@@ -450,31 +529,62 @@ bool UserInterface::run_cmd(string cmd){
 			homeScreen();
 		}
 		//display
-		if(cmd.compare(back.trigger) == 0){
+		if(cmd.compare(display.trigger) == 0){
 			if(hidden)
 				hidden = false;
 			else
 				hidden = true;
-
-			//return previous screen
 		}
 		//next
 		if(cmd.compare(next.trigger) == 0){
-			if(!last_page)
-				cur_page++;
+			if(cur_screen == INFO){
+				if(!last_page)
+					cur_page++;
+				
 				infoScreen();
+			}
+			if(cur_screen == PAGE){
+				if(!last_page_page){
+					change_page_page = true;																									//issue
+					char_count_history.push_back(char_count);
+					pageScreen(page_selection, change_page_page);
+				}
+				else
+					pageScreen(page_selection, change_page_page);
+			}
+
 		}
 		//previous
 		if(cmd.compare(previous.trigger) == 0){
-			if(cur_page <= 0){
-				searchScreen();
+			if(cur_screen == INFO){
+				if(cur_page <= 0){
+					searchScreen();
+				}
+				else{
+					cur_page--;
+					infoScreen();
+				}
 			}
-			cur_page--;
-			infoScreen();
+			if(cur_screen == PAGE){
+
+				if( (!first_page_page) && (char_count_history.size() > 0)){
+					change_page_page = true;
+					char_count_history.pop_back();
+					char_count = char_count_history[char_count_history.size()-1];
+					char_count_history.pop_back();
+					pageScreen(page_selection, change_page_page);
+				}
+				else
+					infoScreen();
+			}
 		}
 		//back
-		if(cmd.compare(back.trigger) == 0)
-			searchScreen();
+		if(cmd.compare(back.trigger) == 0){
+			if(cur_screen == PAGE)
+				infoScreen();
+			else
+				back_screen();
+		}
 
 		//tmp pageBack
 		if(cmd.compare(pageBack.trigger) == 0)
@@ -495,7 +605,8 @@ bool UserInterface::run_cmd(string cmd){
 string UserInterface::cmds_toString(){
 
 	string command_box;
-	command_box = border('_', screen_width, 2);
+	//command_box = border('_', screen_width, 2);
+	command_box += "\n\n";
 	command_box += "CMDS:\t";
 
 	for(int i=0; i<cur_cmds.size(); i++){
