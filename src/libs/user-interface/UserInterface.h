@@ -50,6 +50,7 @@ public:
 
 		//page info
 		char_count = 0;
+		buffer_char_count = char_count;
 		last_page_page = false;
 		first_page_page = true;
 		change_page_page = false;
@@ -112,6 +113,7 @@ public:
 	int page_max;
 	bool last_page;
 	int char_count;
+	int buffer_char_count;
 	vector<int> char_count_history;
 	bool last_page_page;
 	bool first_page_page;
@@ -149,14 +151,3 @@ public:
 };
 
 #endif	//USERINTERFACE_H
-
-			// ( screens )
-	//homeScreen	//options: (q)uit, (c)onfig , (n)ew
-		//[# of saved doc] 
-	//searchScreen 	//options: (q)uit, (c)onfig, (h)ome, ( (s)ave )
-		//[query]
-	//infoScreen	//options: (q)uit, (h)ome, (b)ack, (j)scroll down, (k)scroll up
-		//[# doc selection]
-	//pageScreen	//options: (q)uit, (h)ome, (b)ack, (j)scroll down, (k)scroll up
-	//configScreen	//options: (q)uit, (home)
-		//[config cmds]

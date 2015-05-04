@@ -245,11 +245,16 @@ struct info_packet{
 
 		return s;
 	}
-
+	/**
+		toString method that returns a full formmated xml page.
+	*/
 	std::string page_toString(int &char_count_ref, bool &last_page, bool &first_page, bool change_page_page){
 		bool more_text = true;
 		bool begin = false;
 		int char_count = char_count_ref;
+
+		//TMP***
+		std::cout << "page_tostring char_count= " << char_count << std::endl;
 
 		//string to return
 		std::string s;
@@ -265,17 +270,13 @@ struct info_packet{
 		//text to display
 		std::string displayed_text = " ";			//starts from &char_count
 
-
-		if(contributors.size() > 0){
-			s += "\n\t\t\t\t\tCONTRIBUTORS: ";
-			s += contributors;
-			cur_line_count++;
-			s += "\n";
-		}	
-
 		while ((cur_line_count < max_lines) && more_text){
 
+				/*
 				if(text.size() > char_count)
+					begin = true;
+				*/
+				if(char_count == 0)
 					begin = true;
 
 				//if text remains
@@ -305,9 +306,8 @@ struct info_packet{
 
 					char_count++;
 				}
-				else{
+				else
 					more_text = false;
-				}
 
 		}
 
@@ -321,13 +321,27 @@ struct info_packet{
 		else
 			first_page = true;
 
+		//tmp cur line screw up
+		if((contributors.size() > 0) && first_page){
+			s += "\n\t\t\t\t\t\tCONTRIBUTORS: ";
+			s += contributors;
+			cur_line_count++;
+			s += "\n";
+		}
+		//tmp cur line screw up
+		if( last_page ){
+			s += "\n\t\t\t\t\t\t\t  END ";
+			cur_line_count++;
+			s += "\n";
+		}	
+
 		s += "\n\n\t\t ";
 		s += displayed_text;
 
 		s += "\n\n";
 
 		//update char count if true
-		if(change_page_page)
+		//if(change_page_page)
 			char_count_ref = char_count;
 
 		return s;

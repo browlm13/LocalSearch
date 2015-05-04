@@ -166,8 +166,6 @@ void UserInterface::newDocScreen(){
 	//check if ui is a cmd
 	if(!run_cmd(ui)){
 		//search
-
-		//TMP
 		cout << "opening " << ui << endl;
 		qe->add_newDoc(ui);
 	}else{
@@ -180,27 +178,6 @@ void UserInterface::newDocScreen(){
 		edit:		if you must search cmds
 					use quotes.				*/
 
-
-	//string new_path = prompt("[new path]: ");
-	//qe->add_newDoc(new_path);			//error return
-
-
-	//if h
-	//homeScreen();
-
-	//if s
-	//qe->save_newDoc();				//error return
-
-
-	//if c
-	//configScreen();
-
-
-	//if q
-	//quitScreen();
-
-	//drops through to search screen if success
-	//searchScreen();
 }
 
 void UserInterface::searchScreen(){
@@ -427,8 +404,10 @@ void UserInterface::infoScreen(){
 	if(is_int(ui)){
 		page_selection = atoi( ui.c_str() );
 
-		if(page_selection <= page_max)
-			pageScreen((cur_page * page_max) + page_selection -1, change_page_page);
+		if(page_selection <= page_max){
+			page_selection = (cur_page * page_max) + page_selection -1;
+			pageScreen(page_selection, change_page_page);
+		}
 		else
 			cout << "out of range.";
 	}
@@ -440,23 +419,24 @@ void UserInterface::infoScreen(){
 
 }
 void UserInterface::pageScreen(int selection, bool change_page){
+
 	//naviation init for PAGE does not add to history// just for special back function
 	cur_screen = PAGE;
 
 	vector<info_packet> paginated_results = qe->get_ip_results();
 
-	//Info Screen CMDS
-	vector<cmd> infoScreen_cmds;
-	infoScreen_cmds.push_back(home);
-	infoScreen_cmds.push_back(config);
-	infoScreen_cmds.push_back(newDoc);
-	infoScreen_cmds.push_back(display);
-	infoScreen_cmds.push_back(next);								//should be command specific to page
-	infoScreen_cmds.push_back(previous);							//should be command specific to current page
-	infoScreen_cmds.push_back(back);
-	infoScreen_cmds.push_back(quit);
+	//Page Screen CMDS
+	vector<cmd> pageScreen_cmds;
+	pageScreen_cmds.push_back(home);
+	pageScreen_cmds.push_back(config);
+	pageScreen_cmds.push_back(newDoc);
+	pageScreen_cmds.push_back(display);
+	pageScreen_cmds.push_back(next);								//should be command specific to page
+	pageScreen_cmds.push_back(previous);							//should be command specific to current page
+	pageScreen_cmds.push_back(back);
+	pageScreen_cmds.push_back(quit);
 
-	set_cmds(infoScreen_cmds);
+	set_cmds(pageScreen_cmds);
 
 	//start
 	system("clear");
@@ -466,10 +446,25 @@ void UserInterface::pageScreen(int selection, bool change_page){
 	title += "\"";
 
 	header( title, " ", "make an art function");
-	cout <<  paginated_results[selection].page_toString(char_count, last_page_page, first_page_page, change_page_page);					//should be page version to string	
+
+
+	//TMP***
+	buffer_char_count = char_count;
+
+	cout <<  paginated_results[selection].page_toString(buffer_char_count, last_page_page, first_page_page, change_page_page);		
 	change_page_page = false;
 
-	string ui = prompt("\n[?]: ");
+
+	//TMP***
+	cout<<  endl << "actual count:" << char_count << endl << "vector: ";
+
+		//TMP***
+	for(int i = 0; i < char_count_history.size(); i++)
+	{
+		cout << endl << char_count_history[i] << endl;
+	}
+
+	string ui = prompt("\n ");
 	run_cmd(ui);
 
 	pageScreen(page_selection, change_page_page);
@@ -536,26 +531,46 @@ bool UserInterface::run_cmd(string cmd){
 		}
 		//next
 		if(cmd.compare(next.trigger) == 0){
-			if(cur_screen == INFO){
+
+			if(cur_screen == PAGE){
+				if(!last_page_page){
+					change_page_page = true;																									//issue
+					char_count_history.push_back(char_count);
+					char_count = buffer_char_count;
+				}
+				else{
+					change_page_page = false;
+				}
+				pageScreen(page_selection, change_page_page);
+			}
+
+			else if(cur_screen == INFO){
 				if(!last_page)
 					cur_page++;
 				
 				infoScreen();
 			}
-			if(cur_screen == PAGE){
-				if(!last_page_page){
-					change_page_page = true;																									//issue
-					char_count_history.push_back(char_count);
-					pageScreen(page_selection, change_page_page);
-				}
-				else
-					pageScreen(page_selection, change_page_page);
-			}
 
 		}
 		//previous
 		if(cmd.compare(previous.trigger) == 0){
-			if(cur_screen == INFO){
+
+			if(cur_screen == PAGE){
+
+				//if( (!first_page_page) && (char_count_history.size() > 0)){
+				if(char_count_history.size() > 0){
+					change_page_page = true;
+					char_count = char_count_history[char_count_history.size()-1];
+					char_count_history.pop_back();
+					pageScreen(page_selection, change_page_page);
+				}
+				else{
+					change_page_page = false;
+					infoScreen();
+				}
+			}
+
+			else if(cur_screen == INFO){
 				if(cur_page <= 0){
 					searchScreen();
 				}
@@ -563,18 +578,6 @@ bool UserInterface::run_cmd(string cmd){
 					cur_page--;
 					infoScreen();
 				}
-			}
-			if(cur_screen == PAGE){
-
-				if( (!first_page_page) && (char_count_history.size() > 0)){
-					change_page_page = true;
-					char_count_history.pop_back();
-					char_count = char_count_history[char_count_history.size()-1];
-					char_count_history.pop_back();
-					pageScreen(page_selection, change_page_page);
-				}
-				else
-					infoScreen();
 			}
 		}
 		//back
