@@ -5,8 +5,9 @@
 
 #include "data-packets/Data_Packets.h"
 
-//TMP***
-//#include "formatting/StopWords_Hash.h"
+//TMP*** to be done in format tex namespace
+#include "formatting/StopWords_Hash.h"
+#include "porter2-stemmer/porter2_stemmer.h"
 
 using namespace std;
 
@@ -139,8 +140,25 @@ bool QueryEngine::search(std::string raw_query){
 	wp_results.clear();
 	ip_results.clear();
 
+
+
 	//format query
-	formatted_query = FormatText::format_query(raw_query);
+	//formatted_query = FormatText::format_query(raw_query);
+
+	//tmp to be done int formattext namespace
+	vector<string> full_query = FormatText::format_query(raw_query);
+	StopWords_Hash swh;
+
+	for(int i =0; i < full_query.size(); i++){
+		if(!swh.is_stop_word(full_query[i])){
+			//tmp to be done in format text namespace
+			Porter2Stemmer::stem(full_query[i]);
+			formatted_query.push_back(full_query[i]);
+		}
+	}
+	//tmp to be done in format tex namespace
+
+
 
 	string cur_operation = "||";
 	vector<word_packet> running_results;

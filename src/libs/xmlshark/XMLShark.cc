@@ -4,8 +4,8 @@
 
 #include "formatting/FormatText.h"
 
-//TMP***
-#include "formatting/StopWords_Hash.h"
+//TMP*** to be done in formattext namespace
+//#include "formatting/StopWords_Hash.h"
 #include "porter2-stemmer/porter2_stemmer.h"
 
 using namespace std;
@@ -83,7 +83,7 @@ void XMLShark::_parse(string path, long location){
 											*/
 
 		//TMP***
-	StopWords_Hash swh;
+	//StopWords_Hash swh;
 
 	//save path
 	path_name = path;
@@ -108,6 +108,7 @@ void XMLShark::_parse(string path, long location){
 
 		if( c != '<'){//not tag
 			if(collect_formatted_strings){
+				//format_push_clear(fm_strs, str);
 				str.clear();
 				fm_strs.clear();
 
@@ -133,7 +134,7 @@ void XMLShark::_parse(string path, long location){
 					c = file.get();
 				}
 
-				//laggers not pretty
+				//lag not pretty
 				if ( str.size() > 0 ){
 						//format_push_clear(fm_strs, str);
 						fm_strs.push_back(str);
@@ -213,7 +214,7 @@ void XMLShark::format_push_clear(vector<string> &v, string &s){
 						*/
 
 	FormatText::lower_case(s);
-	//Porter2Stemmer::stem(s);
+	Porter2Stemmer::stem(s);
 	//s = FormatText::format_word(s);
 /*
 	//tmp

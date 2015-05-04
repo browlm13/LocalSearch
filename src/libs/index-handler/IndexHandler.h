@@ -7,7 +7,7 @@
 
 #include "IndexBuilder_Tree.h"
 #include "IndexLoader_Tree.h"
-//#include "IndexLoader_Hash.h"
+#include "IndexLoader_Hash.h"
 
 using namespace std;
 
@@ -26,7 +26,7 @@ private:
 
 	//test tmp
 	IndexLoader_Tree			loader_avl;
-	//IndexLoader_Hash			loader_hash;
+	IndexLoader_Hash			loader_hash;
 	IndexBuilder_Tree 			builder_avl;
 
 	IndexLoader_Interface		*loader;

@@ -1,47 +1,14 @@
-#ifndef INDEXLOADER_HASH_H
-#define INDEXLOADER_HASH_H
-
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "IndexLoader_Interface.h"
-#include "IndexBuilder_Tree_Child.h"
-#include "data-packets/Data_Packets.h"
+#include "IndexLoader_Hash.h"
+//#include "IndexLoader_Interface.h"
+//#include "IndexBuilder_Tree_Child.h"
+//#include "data-packets/Data_Packets.h"
 
 using namespace std;
 
-class IndexLoader_Hash : public IndexLoader_Interface {
-
-	unsigned size;	//some prime number
-
-	//element
-	struct element{
-		element(std::string key, IndexBuilder_Tree_Child value) : key(key), value(value){}
-		std::string key;
-		IndexBuilder_Tree_Child value;
-	};
-
-	vector<element> *table;
-
-	unsigned 					index 	(std::string key);		//returns index
-	void 						_add	(std::string key, word_packet wp);
-	IndexBuilder_Tree_Child* 	_get	(std::string key);
-
-public:
-	void 	clear			();
-	void search(std::string query, std::vector<word_packet> &top_results);
-	void addWord(word_packet &wp);
-
-	IndexLoader_Hash() {
-		size = 2027;
-		table = new vector<element> [size];
-	}
-	~IndexLoader_Hash(){
-		delete [] table;
-	}
-};
-/*
 void IndexLoader_Hash::search(std::string query, std::vector<word_packet> &top_results){
 	IndexBuilder_Tree_Child *ibc = &(*(_get(query)));
 	if(ibc)
@@ -100,5 +67,3 @@ IndexBuilder_Tree_Child* IndexLoader_Hash::_get(std::string key){
 void IndexLoader_Hash::clear(){
 	delete [] table;
 }
-*/
-#endif //INDEXLOADER_HASH_H
